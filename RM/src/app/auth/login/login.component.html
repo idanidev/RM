@@ -1,0 +1,20 @@
+<p-card header="Iniciar Sesión">
+    <form (ngSubmit)="onLogin()">
+        <div class="p-fluid">
+            <div class="p-field">
+                <label for="email">Correo Electrónico</label>
+                <input id="email" type="email" pInputText [(ngModel)]="email"
+                    name="email" required />
+            </div>
+            <div class="p-field">
+                <label for="password">Contraseña</label>
+                <input id="password" type="password" pInputText
+                    [(ngModel)]="password" name="password" required />
+            </div>
+            <p-button label="Iniciar Sesión" icon="pi pi-sign-in"
+                type="submit"></p-button>
+            <p-button label="Registrarse" icon="pi pi-user-plus"
+                routerLink="/register"></p-button>
+        </div>
+    </form>
+</p-card>

@@ -1,0 +1,87 @@
+<p-button label="Nuevo Ejercicio" icon="pi pi-plus" (click)="nuevoEjercicio()"
+    styleClass="mb-2"></p-button>
+
+<p-table [value]="ejercicios" [paginator]="true" [rows]="10"
+    [responsiveLayout]="'scroll'">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Nombre</th>
+            <th>RM</th>
+            <th>Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ejercicio>
+        <tr>
+            <td>{{ ejercicio.nombre }}</td>
+            <td>{{ ejercicio.rm }}</td>
+            <td>
+                <div class="button-container">
+                    <p-button icon="pi pi-eye"
+                        (click)="visualizarEjercicio(ejercicio)"></p-button>
+                    <p-button icon="pi pi-pencil"
+                        (click)="editarEjercicio(ejercicio)"
+                        styleClass="mb-2"></p-button>
+                    <p-button icon="pi pi-trash"
+                        (click)="eliminarEjercicio(ejercicio)" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog
+    [(visible)]="mostrarDialogo"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [header]="
+    modoDialogo === 'nuevo'
+      ? 'Nuevo Ejercicio'
+      : modoDialogo === 'editar'
+      ? 'Editar Ejercicio'
+      : 'Detalles del Ejercicio'
+  "
+    [closable]="true"
+    (onHide)="cerrarDialogo()">
+    <div *ngIf="ejercicioSeleccionado">
+        <div *ngIf="modoDialogo === 'visualizar'; else editarTemplate">
+            <h3>{{ ejercicioSeleccionado.name }}</h3>
+            <p>RM: {{ ejercicioSeleccionado.rm }}</p>
+            <!-- Otros detalles del ejercicio -->
+        </div>
+        <ng-template #editarTemplate>
+            <div class="p-fluid">
+                <div class="p-field">
+                    <label for="nombre">Nombre</label>
+                    <input
+                        id="nombre"
+                        type="text"
+                        pInputText
+                        [(ngModel)]="ejercicioSeleccionado.name"
+                        [readonly]="modoDialogo === 'visualizar'" />
+                </div>
+                <div class="p-field">
+                    <label for="rm">RM</label>
+                    <input
+                        id="rm"
+                        type="number"
+                        pInputText
+                        [(ngModel)]="ejercicioSeleccionado.rm"
+                        [readonly]="modoDialogo === 'visualizar'" />
+                </div>
+                <!-- Otros campos editables -->
+            </div>
+        </ng-template>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            (click)="cerrarDialogo()"
+            class="p-button-text"></p-button>
+        <p-button
+            *ngIf="modoDialogo !== 'visualizar'"
+            label="Guardar"
+            icon="pi pi-check"
+            (click)="guardarEjercicio()"></p-button>
+    </ng-template>
+</p-dialog>
