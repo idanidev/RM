@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/service/auth.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,9 @@ import { AuthService } from '../../core/service/auth.service';
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    CardModule
+    CardModule,
+    PasswordModule,
+    FloatLabelModule
   ]
 })
 export class LoginComponent {

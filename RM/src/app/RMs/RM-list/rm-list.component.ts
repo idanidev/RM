@@ -22,7 +22,7 @@ export class RmListComponent implements OnInit {
   constructor(private appwriteService: EjercicioService) { }
 
   ejercicios: Ejercicio[] = [
-    // { name: 'Sentadilla', rm: [150], descripcion: 'Ejercicio de pierna' },
+    { name: 'Sentadilla', rm: [JSON.stringify({ valor: 150, fecha: '1996-11-27' })], ID_User:'678d44540024adf64db1', descripcion: 'Ejercicio de pierna' },
     // { name: 'Press de banca', rm: [100], descripcion: 'Ejercicio de pecho' }
   ];
 
