@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppwriteException } from 'appwrite';
 import { account, ID } from '../interceptors/appwrite';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private loggedIn = new BehaviorSubject<boolean>(false);
+  isLoggedIn = this.loggedIn.asObservable();
+  
   constructor(private router: Router) { }
 
   async register(email: string, password: string, name: string): Promise<void> {
@@ -30,6 +34,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<void> {
     try {
       await account.createEmailPasswordSession(email, password);
+      this.loggedIn.next(true);
       this.router.navigate(['/']);
     } catch (error: any) {
       this.handleError(error);
@@ -39,6 +44,7 @@ export class AuthService {
   async logout(): Promise<void> {
     try {
       await account.deleteSession('current');
+      this.loggedIn.next(false);
       this.router.navigate(['/login']);
     } catch (error: any) {
       this.handleError(error);

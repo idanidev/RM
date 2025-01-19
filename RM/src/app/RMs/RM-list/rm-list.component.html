@@ -7,13 +7,15 @@
         <tr>
             <th>Nombre</th>
             <th>RM</th>
+            <th>Fecha</th>
             <th>Acciones</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-ejercicio>
         <tr>
-            <td>{{ ejercicio.nombre }}</td>
-            <td>{{ ejercicio.rm }}</td>
+            <td>{{ ejercicio.name }}</td>
+            <td>{{ getUltimoRm(ejercicio) }}</td>
+            <td>{{ ejercicio.rm.fecha | date: 'dd/MM/yyyy' }}</td>
             <td>
                 <div class="button-container">
                     <p-button icon="pi pi-eye"
@@ -65,7 +67,7 @@
                         id="rm"
                         type="number"
                         pInputText
-                        [(ngModel)]="ejercicioSeleccionado.rm"
+                        [(ngModel)]="rmInput"
                         [readonly]="modoDialogo === 'visualizar'" />
                 </div>
                 <!-- Otros campos editables -->
