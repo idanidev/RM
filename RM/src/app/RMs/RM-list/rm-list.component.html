@@ -14,8 +14,8 @@
     <ng-template pTemplate="body" let-ejercicio>
         <tr>
             <td>{{ ejercicio.name }}</td>
-            <td>{{ getUltimoRm(ejercicio) }}</td>
-            <td>{{ ejercicio.rm.fecha | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ getUltimoRm(ejercicio, 'valor') }}</td>
+            <td>{{ getUltimoRm(ejercicio, 'fecha') | date: 'dd/MM/yyyy' }}</td>
             <td>
                 <div class="button-container">
                     <p-button icon="pi pi-eye"

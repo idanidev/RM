@@ -69,15 +69,15 @@ export class RmListComponent implements OnInit {
     this.ejercicioSeleccionado = null;
   }
 
-  getUltimoRm(ejercicio: any): string {
-    if (!ejercicio.rm || ejercicio.rm.length === 0) {
+  getUltimoRm(ejercicio: { rm: string | any[]; }, propiedad: any) {
+    if (!Array.isArray(ejercicio.rm) || ejercicio.rm.length === 0) {
       return 'N/A';
     }
     try {
-      const ultimoRm = ejercicio.rm;
-      return `${ultimoRm.valor}`;
+      const ultimoRmStr = ejercicio.rm[ejercicio.rm.length - 1];
+      return ultimoRmStr[propiedad] !== undefined ? `${ultimoRmStr[propiedad]}` : 'Propiedad no encontrada';
     } catch (error) {
-      console.error('Error parsing RM:', error);
+      console.error('Error al parsear el RM:', error);
       return 'Error';
     }
   }
@@ -109,11 +109,13 @@ export class RmListComponent implements OnInit {
           await this.appwriteService.crearEjercicio(ejercicio, userId);
         }
         else if (this.modoDialogo === 'editar' && this.ejercicioSeleccionado.ID_User) {
-          const rmActual = this.ejercicioSeleccionado.rm ? this.ejercicioSeleccionado.rm : [];
+          let rmActual: string[] = this.ejercicioSeleccionado.rm;
+
+          // const rmActual = this.ejercicioSeleccionado.rm ? this.ejercicioSeleccionado.rm : [];
           const ejercicio: Ejercicio = {
             ID_User: userId,
             name: this.ejercicioSeleccionado.name,
-            rm: [...rmActual, JSON.stringify(nuevoRm)], // Agrega el nuevo RmEntry al array existente
+            rm: [JSON.stringify(rmActual), JSON.stringify(nuevoRm)], // Agrega el nuevo RmEntry al array existente
           };
           await this.appwriteService.actualizarEjercicio(userId, ejercicio);
         }
@@ -127,28 +129,6 @@ export class RmListComponent implements OnInit {
     }
   }
 
-
-  // async obtenerEjercicios() {
-  //   try {
-  //     const user = await this.appwriteService.obtenerUsuarioActual();
-  //     if (!user) {
-  //       throw new Error('User is not logged in');
-  //     }
-  //     const userId = user.$id;
-
-  //     const documentos = await this.appwriteService.obtenerEjerciciosPorUsuario(userId);
-  //     this.ejercicios = documentos.map(doc => ({
-  //       name: doc['name'],
-  //       rm: doc['rm'],
-  //       descripcion: doc['descripcion'],
-  //       ID_User: doc['ID_User']
-  //     }));
-  //     // Actualiza la lista de ejercicios en tu componente
-  //   } catch (error) {
-  //     console.error('Error al obtener los ejercicios:', error);
-  //   }
-  // }
-
   async obtenerEjercicios() {
     try {
       const user = await this.appwriteService.obtenerUsuarioActual();
@@ -161,16 +141,14 @@ export class RmListComponent implements OnInit {
       this.ejercicios = ejercicios.map((ejercicio) => ({
         name: ejercicio['name'],
         ID_User: ejercicio['ID_User'],
-        rm: ejercicio['rm'] ? JSON.parse(ejercicio['rm']) : [],
+        rm: Array.isArray(ejercicio['rm'])
+          ? ejercicio['rm'].map((item) => JSON.parse(item))
+          : [],
       }));
     } catch (error) {
       console.error('Error al obtener los ejercicios:', error);
     }
   }
-
-  // async obtenerEjercicios() {
-  //   this.ejercicios = await this.appwriteService.obtenerEjercicios();
-  // }
 
 }
 
