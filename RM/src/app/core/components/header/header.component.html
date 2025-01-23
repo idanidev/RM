@@ -1,8 +1,12 @@
 <p-menubar [model]="items">
-    <ng-template pTemplate="start">
-        <button pButton icon="pi pi-bars" (click)="items[0]"></button>
-    </ng-template>
+    <button type="button" pButton icon="pi pi-bars"
+        (click)="visibleSidebar = true"></button>
+    <p-sidebar [(visible)]="visibleSidebar" [position]="'left'"
+        [baseZIndex]="10000">
+        <app-sidebar></app-sidebar>
+    </p-sidebar>
     <ng-template pTemplate="end">
-        <button pButton label="Cerrar sesión" icon="pi pi-sign-out" (click)="logout()"></button>
+        <button pButton label="Cerrar sesión" icon="pi pi-sign-out"
+            (click)="logout()"></button>
     </ng-template>
 </p-menubar>

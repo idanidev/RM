@@ -145,18 +145,6 @@ export class EjercicioService {
         }
     }
 
-    // crearEjercicio(ejercicio: Ejercicio) {
-    //     return this.database.createDocument(this.databaseId, this.collectionId, ID.unique(), ejercicio);
-    // }
-
-    // actualizarEjercicio(ejercicio: Ejercicio) {
-    //     if (ejercicio.id) {
-    //         return this.database.updateDocument(this.databaseId, this.collectionId, ejercicio.id.toString(), ejercicio);
-    //     } else {
-    //         return Promise.reject(new Error('Ejercicio ID is required for update'));
-    //     }
-    // }
-
     eliminarEjercicio(id: string) {
         return this.database.deleteDocument(this.databaseId, this.collectionId, id);
     }

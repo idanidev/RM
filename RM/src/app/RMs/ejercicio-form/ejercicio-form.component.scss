@@ -1,0 +1,35 @@
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.p-field {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+small {
+  color: red;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    width: 100%;
+    padding: 0.5rem;
+  }
+}

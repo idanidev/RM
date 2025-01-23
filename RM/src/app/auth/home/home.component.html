@@ -1,15 +1,3 @@
-
-<!-- Botón para mostrar/ocultar el sidebar -->
-<button type="button" pButton icon="pi pi-bars"
-    (click)="visibleSidebar = true"></button>
-
-<!-- Sidebar de PrimeNG -->
-<p-sidebar [(visible)]="visibleSidebar" [position]="'left'"
-    [baseZIndex]="10000">
-    <app-sidebar></app-sidebar>
-</p-sidebar>
-
-<!-- Contenido principal de la aplicación -->
 <div class="content">
     <app-header></app-header>
     <app-rm-list></app-rm-list>

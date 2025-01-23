@@ -1,21 +1,26 @@
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
+import { MenubarModule } from 'primeng/menubar';
+import { SidebarModule } from 'primeng/sidebar';
+import { AuthService } from '../../service/auth.service';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenubarModule,ButtonModule],
+  imports: [MenubarModule, ButtonModule, SidebarModule, SidebarComponent,],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  visibleSidebar: any;
+
   items: MenuItem[];
 
-  constructor() {
+  constructor(private authService: AuthService,) {
     this.items = [
-      { 
+      {
         label: '',
         icon: 'pi pi-bars',
         command: () => {
@@ -33,6 +38,6 @@ export class HeaderComponent {
   }
 
   logout() {
-    // Lógica para cerrar sesión
+    this.authService.logout();
   }
 }

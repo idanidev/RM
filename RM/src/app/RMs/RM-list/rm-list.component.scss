@@ -1,8 +1,46 @@
-table {
-  border-spacing: 10px; /* Ajusta el valor según tus necesidades */
+/* Estilo para la tabla */
+p-table {
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-.button-container {
-  display: flex;
-  gap: 8px; /* Ajusta el valor según el espacio deseado */
+.acciones-pequenas {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  /* Estilos para pantallas pequeñas */
+  .acciones-grandes {
+    display: none;
+  }
+  .acciones-pequenas {
+    display: flex;
+  }
+}
+
+.p-menu {
+  position: absolute !important;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Mejorar visualización de filas en móviles */
+@media (max-width: 960px) {
+  .p-datatable-tbody tr {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #333;
+  }
+
+  .p-datatable-tbody td {
+      flex: 1;
+      text-align: center;
+  }
+
+  .p-datatable-tbody td:last-child {
+      text-align: right;
+  }
 }

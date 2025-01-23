@@ -19,9 +19,6 @@ export class AuthService {
       if (!name || !email || !password) {
         return;
       }
-      const randomString = Math.random().toString(36).substring(2, 15);
-      // const userId = `${username.replace(/[^a-zA-Z0-9.-_]/g, "").toLowerCase()}_${randomString}`
-
       await account.create(ID.unique(), email, password, name);
       await this.login(email, password);
     } catch (error: any) {
@@ -30,9 +27,24 @@ export class AuthService {
     }
   }
 
-
   async login(email: string, password: string): Promise<void> {
     try {
+      // Verificar si hay una sesión activa
+      const session = await account.getSession('current');
+      if (session) {
+        // Si hay una sesión activa, eliminarla
+        await account.deleteSession('current');
+      }
+    } catch (error: any) {
+      // Si el error es 401, significa que no hay una sesión activa, lo cual es esperado
+      if (error.code !== 401) {
+        this.handleError(error);
+        return;
+      }
+    }
+
+    try {
+      // Crear una nueva sesión
       await account.createEmailPasswordSession(email, password);
       this.loggedIn.next(true);
       this.router.navigate(['/']);
@@ -51,6 +63,21 @@ export class AuthService {
     }
   }
 
+  async checkSession(): Promise<void> {
+    try {
+      const user = await account.get();
+      this.loggedIn.next(true);
+      console.log('Sesión activa encontrada para el usuario:', user);
+    } catch (error: any) {
+      if (error.code === 401) {
+        // No hay sesión activa
+        this.loggedIn.next(false);
+        console.log('No se encontró una sesión activa.');
+      } else {
+        this.handleError(error);
+      }
+    }
+  }
 
   getCurrentUser() {
     return account.get();
