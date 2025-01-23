@@ -50,7 +50,7 @@ export class RmListComponent implements OnInit {
   ) {
     this.acciones = [
       { label: 'Visualizar', icon: 'pi pi-chart-line', command: () => this.visualizarEjercicio(this.ejercicioSeleccionado) },
-      { label: 'Editar', icon: 'pi pi-pencil', command: () => { if (this.ejercicioSeleccionado) this.editarEjercicio(this.ejercicioSeleccionado); } },
+      { label: 'Añadir', icon: 'pi pi-plus', command: () => { if (this.ejercicioSeleccionado) this.editarEjercicio(this.ejercicioSeleccionado); } },
       { label: 'Eliminar', icon: 'pi pi-trash', command: () => { if (this.ejercicioSeleccionado) this.confirmarEliminacion(this.ejercicioSeleccionado); } }
     ];
   }
