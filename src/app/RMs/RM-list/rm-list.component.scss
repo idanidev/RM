@@ -9,19 +9,12 @@ p-table {
 }
 
 @media (max-width: 960px) {
-  /* Estilos para pantallas pequeñas */
   .acciones-grandes {
     display: none;
   }
   .acciones-pequenas {
     display: flex;
   }
-}
-
-.p-menu {
-  position: absolute !important;
-  right: 0;
-  z-index: 1000;
 }
 
 /* Mejorar visualización de filas en móviles */
