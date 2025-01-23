@@ -3,6 +3,11 @@
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 
+body, html, main {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 html {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -27,6 +32,7 @@ body {
   max-width: 100%; /* Asegura que el formulario no exceda el ancho del contenedor */
   padding: 1rem; /* Espaciado interno del formulario */
   box-sizing: border-box; /* Incluye el padding y el borde en el cálculo del ancho */
+  width: 100%;
 }
 
 .button-group {
