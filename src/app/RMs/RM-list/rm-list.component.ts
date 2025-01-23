@@ -67,7 +67,7 @@ export class RmListComponent implements OnInit {
 
   editarEjercicio(ejercicio: Ejercicio) {
     this.ejercicioSeleccionado = { ...ejercicio };
-    this.dialogHeader = 'Editar Ejercicio';
+    this.dialogHeader = 'Añadir nuevo RM';
     this.mostrarDialogo = true;
   }
 

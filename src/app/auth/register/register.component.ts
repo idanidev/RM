@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/service/auth.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,9 @@ import { CardModule } from 'primeng/card';
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    CardModule
+    CardModule,
+    RouterModule,
+    FloatLabelModule
   ]
 })
 export class RegisterComponent {

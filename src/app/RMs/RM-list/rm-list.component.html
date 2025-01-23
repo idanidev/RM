@@ -24,7 +24,7 @@
                     <p-button icon="pi pi-chart-line"
                         (click)="visualizarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
-                    <p-button icon="pi pi-pencil"
+                    <p-button icon="pi pi-plus"
                         (click)="editarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
 
@@ -56,9 +56,11 @@
 <p-dialog [(visible)]="mostrarDialogo" [modal]="true"
     [style]="{ width: '70vw' }" [header]="dialogHeader"
     (onHide)="cerrarDialogo()">
-    <app-ejercicio-form [ejercicio]="ejercicioSeleccionado"
-        (save)="guardarEjercicio($event)"
-        (cancel)="cerrarDialogo()"></app-ejercicio-form>
+    <ng-container *ngIf="mostrarDialogo">
+        <app-ejercicio-form [ejercicio]="ejercicioSeleccionado"
+            (save)="guardarEjercicio($event)"
+            (cancel)="cerrarDialogo()"></app-ejercicio-form>
+    </ng-container>
 </p-dialog>
 
 <p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true"

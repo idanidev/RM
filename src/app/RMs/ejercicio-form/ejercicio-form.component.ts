@@ -5,10 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ejercicio-form',
-  imports: [DialogModule, ButtonModule, ReactiveFormsModule, FloatLabelModule, CardModule, CommonModule],
+  imports: [DialogModule, ButtonModule, ReactiveFormsModule, FloatLabelModule, CardModule, CommonModule, FormsModule ],
   standalone: true,
   templateUrl: './ejercicio-form.component.html',
   styleUrl: './ejercicio-form.component.scss'
@@ -23,23 +24,18 @@ export class EjercicioFormComponent {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.ejercicioForm = new FormGroup({
-      name: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required, Validators.minLength(3)]
-      }),
-      rm: new FormControl<number | null>(null, {
-        validators: [Validators.required, Validators.min(1)]
-      })
+    this.ejercicioForm = this.fb.group({
+      name: [this.ejercicio?.name || '', [Validators.required, Validators.minLength(3)]],
+      rm: [null, [Validators.required, Validators.min(1)]]
     });
   }
 
   get name() {
-    return this.ejercicioForm.get('name');
+    return this.ejercicioForm?.get('name');
   }
 
   get rm() {
-    return this.ejercicioForm.get('rm');
+    return this.ejercicioForm?.get('rm');
   }
 
   onSubmit() {

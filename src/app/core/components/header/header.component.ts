@@ -20,13 +20,13 @@ export class HeaderComponent {
 
   constructor(private authService: AuthService,) {
     this.items = [
-      {
-        label: '',
-        icon: 'pi pi-bars',
-        command: () => {
-          // Lógica para abrir/cerrar el sidenav
-        }
-      },
+      // {
+      //   label: '',
+      //   icon: 'pi pi-bars',
+      //   command: () => {
+      //     // Lógica para abrir/cerrar el sidenav
+      //   }
+      // },
       // {
       //   label: 'Cerrar sesión',
       //   icon: 'pi pi-sign-out',
