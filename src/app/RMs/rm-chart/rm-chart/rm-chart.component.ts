@@ -19,14 +19,12 @@ export class RmChartComponent implements OnChanges {
     this.updateChartData();
   }
   updateChartData() {
+    const valoresRM = this.rmData.map(entry => entry.valor);
+    const valorMinimo = Math.min(...valoresRM);
+    const valorMaximo = Math.max(...valoresRM);
     if (this.rmData && this.rmData.length > 0) {
       const labels = this.rmData.map(entry => new Date(entry.fecha).toLocaleDateString());
       const data = this.rmData.map(entry => entry.valor);
-      console.log('rmData:', this.rmData);
-      
-      console.log('Labels:', labels);
-      console.log('Data:', data);
-      
       this.chartData = {
         labels: labels,
         datasets: [
@@ -42,6 +40,7 @@ export class RmChartComponent implements OnChanges {
 
       this.chartOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'top',
@@ -63,7 +62,9 @@ export class RmChartComponent implements OnChanges {
               display: true,
               text: 'Peso (kg)'
             },
-            beginAtZero: true
+            beginAtZero: false,
+            min: valorMinimo - 10,
+            max: valorMaximo + 10
           }
         }
       };

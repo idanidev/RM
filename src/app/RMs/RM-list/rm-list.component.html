@@ -64,6 +64,6 @@
 </p-dialog>
 
 <p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true"
-    [style]="{width: '70vw'}" (onHide)="displayChart = false">
+    [style]="{width: '90vw', height: '50vh'}" (onHide)="displayChart = false">
     <app-rm-chart [rmData]="selectedRmData"></app-rm-chart>
 </p-dialog>
