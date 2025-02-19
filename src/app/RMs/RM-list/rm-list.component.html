@@ -1,11 +1,9 @@
- <p-toolbar styleClass="mb-6">
+<p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2"
-            (onClick)="nuevoEjercicio()" />
+        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="nuevoEjercicio()" />
     </ng-template>
 </p-toolbar>
-<p-table [value]="ejercicios" [paginator]="true" [rows]="10"
-    responsiveLayout="scroll" breakpoint="960px">
+<p-table [value]="ejercicios" [paginator]="true" [rows]="10" responsiveLayout="scroll" breakpoint="960px">
     <ng-template pTemplate="header">
         <tr>
             <th>Nombre</th>
@@ -21,19 +19,15 @@
             <td>{{ getUltimoRm(ejercicio, 'fecha') | date: 'dd/MM/yyyy' }}</td>
             <td>
                 <div class="acciones-grandes">
-                    <p-button icon="pi pi-chart-line"
-                        (click)="visualizarEjercicio(ejercicio)"
+                    <p-button icon="pi pi-chart-line" (click)="visualizarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
-                    <p-button icon="pi pi-pencil"
-                        (click)="editarEjercicio(ejercicio)"
+                    <p-button icon="pi pi-pencil" (click)="editarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
 
                     <p-toast></p-toast>
                     <p-confirmpopup></p-confirmpopup>
-                    <p-button icon="pi pi-trash"
-                        (onClick)="confirmarEliminacion(ejercicio)"
-                        styleClass="p-button-rounded p-button-text"
-                        severity="danger" [outlined]="true"></p-button>
+                    <p-button icon="pi pi-trash" (onClick)="confirmarEliminacion(ejercicio)"
+                        styleClass="p-button-rounded p-button-text" severity="danger" [outlined]="true"></p-button>
                 </div>
                 <div class="acciones-pequenas">
                     <p-button icon="pi pi-ellipsis-v"
@@ -41,10 +35,8 @@
                         styleClass="p-button-rounded p-button-text"></p-button>
                     <p-overlaypanel #overlayPanel>
                         <div *ngFor="let accion of acciones">
-                            <p-button [label]="accion.label"
-                                [icon]="accion.icon"
-                                (click)="accion.command(); overlayPanel.hide()"
-                                styleClass="p-button-text"></p-button>
+                            <p-button [label]="accion.label" [icon]="accion.icon"
+                                (click)="accion.command(); overlayPanel.hide()" styleClass="p-button-text"></p-button>
                         </div>
                     </p-overlaypanel>
                 </div>
@@ -53,15 +45,14 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="mostrarDialogo" [modal]="true"
-    [style]="{ width: '70vw' }" [header]="dialogHeader"
-    (onHide)="cerrarDialogo()">
-    <app-ejercicio-form [ejercicio]="ejercicioSeleccionado"
-        (save)="guardarEjercicio($event)"
-        (cancel)="cerrarDialogo()"></app-ejercicio-form>
+<p-dialog header="{{dialogHeader}}" [(visible)]="mostrarDialogo" [style]="{width: '50vw'}" [draggable]="false"
+    [resizable]="false" (onHide)="cerrarDialogo()">
+    <app-ejercicio-form *ngIf="mostrarDialogo" [ejercicio]="ejercicioSeleccionado" (save)="guardarEjercicio($event)"
+        (cancel)="cerrarDialogo()">
+    </app-ejercicio-form>
 </p-dialog>
 
-<p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true"
-    [style]="{width: '70vw'}" (onHide)="displayChart = false">
+<p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true" [style]="{width: '70vw'}"
+    (onHide)="displayChart = false">
     <app-rm-chart [rmData]="selectedRmData"></app-rm-chart>
 </p-dialog>

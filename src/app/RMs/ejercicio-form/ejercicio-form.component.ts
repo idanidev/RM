@@ -15,6 +15,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 })
 export class EjercicioFormComponent {
   @Input() ejercicio: any;
+  @Input() modoDialogo: string = 'nuevo';
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -24,7 +25,7 @@ export class EjercicioFormComponent {
 
   ngOnInit() {
     this.ejercicioForm = new FormGroup({
-      name: new FormControl('', {
+      name: new FormControl(this.ejercicio?.name || '', {
         nonNullable: true,
         validators: [Validators.required, Validators.minLength(3)]
       }),
@@ -32,6 +33,9 @@ export class EjercicioFormComponent {
         validators: [Validators.required, Validators.min(1)]
       })
     });
+    if (this.ejercicio?.documentId) {
+      this.ejercicioForm.get('name')?.disable();
+    }
   }
 
   get name() {
