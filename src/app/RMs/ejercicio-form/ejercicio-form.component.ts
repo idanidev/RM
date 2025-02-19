@@ -28,6 +28,9 @@ export class EjercicioFormComponent {
       name: [this.ejercicio?.name || '', [Validators.required, Validators.minLength(3)]],
       rm: [null, [Validators.required, Validators.min(1)]]
     });
+    if (this.ejercicio?.documentId) {
+      this.ejercicioForm.get('name')?.disable();
+    }
   }
 
   get name() {

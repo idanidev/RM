@@ -84,16 +84,8 @@ export class EjercicioService {
         }
     }
 
-    async actualizarEjercicio(userId: string, datosActualizados: Partial<Ejercicio>): Promise<void> {
-
+    async actualizarEjercicio(documentId: string, datosActualizados: Partial<Ejercicio>): Promise<void> {
         try {
-            const documentos = await this.database.listDocuments(
-                this.databaseId,
-                this.collectionId,
-                [Query.equal('ID_User', userId)]
-            );
-            const documentId = documentos.documents[0].$id;
-
             const response = await this.database.updateDocument(
                 this.databaseId,
                 this.collectionId,

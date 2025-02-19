@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -27,18 +27,15 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './rm-list.component.scss'
 })
 export class RmListComponent implements OnInit {
+  @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
   acciones: { label: string, icon: string, command: () => void }[];
   rmInput: number = 0;
   selectedRmData: any[] = [];
   displayChart: boolean = false;
-  ejercicios: Ejercicio[] = [
-    // { name: 'Sentadilla', rm: ["{ 'valor': 150, 'fecha': '1996-11-27' }","{ 'valor': 160, 'fecha': '1996-12-27' }"], ID_User: '678d44540024adf64db1', descripcion: 'Ejercicio de pierna' },
-    // { name: 'Press de banca', rm: [100], descripcion: 'Ejercicio de pecho' }
-  ];
+  ejercicios: Ejercicio[] = [];
 
   dialogHeader = '';
   mostrarDialogo: boolean = false;
-  modoDialogo: 'nuevo' | 'editar' | 'visualizar' = 'nuevo';
   ejercicioSeleccionado: Ejercicio | null = null;
   ultimoRm: RmEntry | null = null;
 
@@ -66,13 +63,13 @@ export class RmListComponent implements OnInit {
   }
 
   editarEjercicio(ejercicio: Ejercicio) {
-    this.ejercicioSeleccionado = { ...ejercicio };
+    this.ejercicioSeleccionado = JSON.parse(JSON.stringify(ejercicio));
     this.dialogHeader = 'Añadir nuevo RM';
     this.mostrarDialogo = true;
   }
 
   eliminarEjercicio(ejercicio: Ejercicio) {
-    this.ejercicioSeleccionado = { ...ejercicio };
+    this.ejercicioSeleccionado = JSON.parse(JSON.stringify(ejercicio));
     this.mostrarDialogo = true;
   }
 
@@ -110,7 +107,6 @@ export class RmListComponent implements OnInit {
 
   async guardarEjercicio(ejercicioData: { name: string; rm: number }) {
     try {
-
       const user = await this.appwriteService.obtenerUsuarioActual();
       if (!user) {
         console.error('No se pudo obtener el ID del usuario.');
@@ -125,19 +121,18 @@ export class RmListComponent implements OnInit {
 
       const nuevoRmString = JSON.stringify(nuevoRm);
 
-      if (this.ejercicioSeleccionado) {
-        let rmActual: string[] = this.ejercicioSeleccionado.rm || [];
+      if (this.ejercicioSeleccionado && this.ejercicioSeleccionado.documentId) {
+        //Si existe el ejercicio y tiene documentId, se actualiza.
+        let rmActual: any[] = this.ejercicioSeleccionado.rm || [];
         rmActual.push(nuevoRm);
 
-        // Actualizar el ejercicio con el array de RM actualizado
         const ejercicioActualizado: Partial<Ejercicio> = {
           name: this.ejercicioSeleccionado.name,
-          rm: rmActual.map(item => JSON.stringify(item)), // Almacena el array de cadenas JSON
+          rm: rmActual.map(item => JSON.stringify(item)),
         };
-        await this.appwriteService.actualizarEjercicio(this.ejercicioSeleccionado.ID_User, ejercicioActualizado);
-
+        await this.appwriteService.actualizarEjercicio(this.ejercicioSeleccionado.documentId, ejercicioActualizado);
       } else {
-        // Crear nuevo ejercicio
+        // Si no existe el ejercicio, se crea uno nuevo.
         const nuevoEjercicio: Ejercicio = {
           ID_User: userId,
           name: ejercicioData.name,
@@ -148,7 +143,7 @@ export class RmListComponent implements OnInit {
       }
 
       this.cerrarDialogo();
-      this.obtenerEjercicios();
+      await this.obtenerEjercicios();
 
     } catch (error) {
       this.errorNotificationService.showError('Error', 'Ocurrió un error al procesar la solicitud.');
@@ -180,7 +175,7 @@ export class RmListComponent implements OnInit {
     }
   }
 
-  confirmarEliminacion(ejercicio : any) {
+  confirmarEliminacion(ejercicio: any) {
     this.confirmationService.confirm({
       // target: event.target as EventTarget,
       message: '¿Estás seguro de que deseas eliminar este elemento?',
@@ -190,7 +185,7 @@ export class RmListComponent implements OnInit {
       accept: async () => {
         await this.appwriteService.eliminarEjercicio(ejercicio.documentId);
         this.messageService.add({ severity: 'success', summary: 'Confirmado', detail: 'Elemento eliminado' });
-        this.obtenerEjercicios(); 
+        await this.obtenerEjercicios();
       },
       reject: () => {
         this.messageService.add({ severity: 'warn', summary: 'Cancelado', detail: 'Operación cancelada' });
@@ -199,4 +194,3 @@ export class RmListComponent implements OnInit {
   }
 
 }
-
