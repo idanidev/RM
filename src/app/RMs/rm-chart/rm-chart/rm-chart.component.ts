@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChartOptions } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
 import { RmEntry } from '../../../core/models/Ejercicio';
 
@@ -13,18 +14,23 @@ export class RmChartComponent implements OnChanges {
 
   @Input() rmData: RmEntry[] = [];
   chartData: any;
-  chartOptions: any;
+  chartOptions!: ChartOptions;
 
-  ngOnChanges() {
+  constructor() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
     this.updateChartData();
   }
+
   updateChartData() {
-    const valoresRM = this.rmData.map(entry => entry.valor);
-    const valorMinimo = Math.min(...valoresRM);
-    const valorMaximo = Math.max(...valoresRM);
     if (this.rmData && this.rmData.length > 0) {
+      const valoresRM = this.rmData.map(entry => entry.valor);
+      const valorMinimo = Math.min(...valoresRM);
+      const valorMaximo = Math.max(...valoresRM);
+
       const labels = this.rmData.map(entry => new Date(entry.fecha).toLocaleDateString());
       const data = this.rmData.map(entry => entry.valor);
+
       this.chartData = {
         labels: labels,
         datasets: [

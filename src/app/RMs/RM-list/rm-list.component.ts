@@ -27,7 +27,10 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './rm-list.component.scss'
 })
 export class RmListComponent implements OnInit {
+
+  @ViewChild(RmChartComponent) rmChartComponent!: RmChartComponent;
   @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
+
   acciones: { label: string, icon: string, command: () => void }[];
   rmInput: number = 0;
   selectedRmData: any[] = [];
@@ -75,6 +78,7 @@ export class RmListComponent implements OnInit {
 
   visualizarEjercicio(ejercicio: any) {
     this.selectedRmData = ejercicio.rm;
+    this.rmChartComponent.updateChartData();
     this.displayChart = true;
   }
 
