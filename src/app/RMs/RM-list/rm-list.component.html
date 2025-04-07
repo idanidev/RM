@@ -1,9 +1,19 @@
-<p-toolbar styleClass="mb-6">
+<!-- <p-toolbar styleClass="mb-6">
     <ng-template #start>
         <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="nuevoEjercicio()" />
     </ng-template>
-</p-toolbar>
-<p-table [value]="ejercicios" [paginator]="true" [rows]="10" responsiveLayout="scroll" breakpoint="960px">
+</p-toolbar> -->
+<p-table #dt [value]="ejercicios" [globalFilterFields]="['name']" [rowHover]="true" [paginator]="true" [rows]="10"
+    responsiveLayout="scroll" breakpoint="960px">
+    <ng-template #caption>
+        <div class="flex items-center justify-between">
+            <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="nuevoEjercicio()" />
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." />
+            </p-iconfield>
+        </div>
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th>Nombre</th>
@@ -21,8 +31,7 @@
                 <div class="acciones-grandes">
                     <p-button icon="pi pi-chart-line" (click)="visualizarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
-                    <p-button icon="pi pi-plus"
-                        (click)="editarEjercicio(ejercicio)"
+                    <p-button icon="pi pi-plus" (click)="editarEjercicio(ejercicio)"
                         styleClass="p-button-rounded p-button-text"></p-button>
 
                     <p-toast></p-toast>
@@ -46,17 +55,15 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="mostrarDialogo" [modal]="true"
-    [style]="{ width: '70vw' }" [header]="dialogHeader"
+<p-dialog [(visible)]="mostrarDialogo" [modal]="true" [style]="{ width: '70vw' }" [header]="dialogHeader"
     (onHide)="cerrarDialogo()">
     <ng-container *ngIf="mostrarDialogo">
-        <app-ejercicio-form [ejercicio]="ejercicioSeleccionado"
-            (save)="guardarEjercicio($event)"
+        <app-ejercicio-form [ejercicio]="ejercicioSeleccionado" (save)="guardarEjercicio($event)"
             (cancel)="cerrarDialogo()"></app-ejercicio-form>
     </ng-container>
 </p-dialog>
 
-<p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true"
-    [style]="{width: '90vw', height: '50vh'}" (onHide)="displayChart = false">
+<p-dialog header="Progreso de RM" [(visible)]="displayChart" [modal]="true" [style]="{width: '90vw', height: '50vh'}"
+    (onHide)="displayChart = false">
     <app-rm-chart [rmData]="selectedRmData"></app-rm-chart>
 </p-dialog>
