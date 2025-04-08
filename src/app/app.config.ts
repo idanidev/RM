@@ -5,22 +5,25 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import Aura from '@primeng/themes/material';
+import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
   provideRouter(routes),
-  ConfirmationService,
+    ConfirmationService,
   provideClientHydration(withEventReplay()),
   provideAnimationsAsync(),
   provideAnimations(),
   importProvidersFrom(ToastModule),
-  MessageService,
+    MessageService,
   providePrimeNG({
     theme: {
-      preset: Aura
+      preset: Aura,
+      options: {
+        darkModeSelector: '.my-app-dark'
+      }
     }
   })]
 };

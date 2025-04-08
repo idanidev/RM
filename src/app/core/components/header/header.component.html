@@ -1,12 +1,18 @@
 <p-menubar [model]="items">
-    <!-- <button type="button" pButton icon="pi pi-bars"
-        (click)="visibleSidebar = true"></button> -->
-    <!-- <p-sidebar [(visible)]="visibleSidebar" [position]="'left'"
-        [baseZIndex]="10000">
-        <app-sidebar></app-sidebar>
-    </p-sidebar> -->
+    <ng-template pTemplate="start">
+        <!-- <button pButton icon="pi pi-bars" (click)="toggleDrawer()" class="p-button-text"></button> -->
+    </ng-template>
     <ng-template pTemplate="end">
-        <button pButton icon="pi pi-sign-out"
-            (click)="logout()"></button>
+        <div class="header-actions">
+            <button pButton icon="pi" [icon]="darkMode ? 'pi pi-sun' : 'pi pi-moon'" (click)="toggleDarkMode()"
+                class="p-button-text"></button>
+            <!-- <button pButton icon="pi pi-cog" (click)="openSettings()" class="p-button-text"></button>
+            <img src="assets/profile.jpg" alt="Profile" class="profile-picture" /> -->
+            <button pButton icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
+        </div>
     </ng-template>
 </p-menubar>
+
+<!-- <p-drawer [(visible)]="drawerVisible" [position]="'left'" [modal]="true" [baseZIndex]="10000">
+    <app-sidebar></app-sidebar>
+</p-drawer> -->

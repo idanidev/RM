@@ -5,17 +5,19 @@ import { MenubarModule } from 'primeng/menubar';
 import { SidebarModule } from 'primeng/sidebar';
 import { AuthService } from '../../service/auth.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenubarModule, ButtonModule, SidebarModule, SidebarComponent,],
+  imports: [MenubarModule, ButtonModule, SidebarModule, SidebarComponent, DrawerModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   visibleSidebar: any;
-
+  drawerVisible: boolean = false;
+  darkMode: boolean = true;
   items: MenuItem[];
 
   constructor(private authService: AuthService,) {
@@ -39,5 +41,18 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  toggleDrawer() {
+    this.drawerVisible = !this.drawerVisible;
+  }
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    const element = document.querySelector('html');
+    element?.classList.toggle('my-app-dark');
+  }
+  openSettings() {
+    console.log('Abrir ajustes');
   }
 }
