@@ -1,18 +1,45 @@
-<p-menubar [model]="items">
+<p-menubar>
     <ng-template pTemplate="start">
-        <!-- <button pButton icon="pi pi-bars" (click)="toggleDrawer()" class="p-button-text"></button> -->
+        <button pButton icon="pi pi-bars" (click)="toggleDrawer()" class="p-button-text"></button>
     </ng-template>
     <ng-template pTemplate="end">
         <div class="header-actions">
             <button pButton icon="pi" [icon]="darkMode ? 'pi pi-sun' : 'pi pi-moon'" (click)="toggleDarkMode()"
                 class="p-button-text"></button>
-            <!-- <button pButton icon="pi pi-cog" (click)="openSettings()" class="p-button-text"></button>
-            <img src="assets/profile.jpg" alt="Profile" class="profile-picture" /> -->
-            <button pButton icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
+            <!-- <button pButton icon="pi pi-cog" (click)="openSettings()" class="p-button-text"></button> -->
+            <div class="flex-auto">
+                <p-overlay-badge badgeSize="small" value="4" severity="danger" class="inline-flex">
+                    <p-avatar class="p-overlay-badge"
+                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/walter.jpg" size="normal" />
+                </p-overlay-badge>
+            </div> <button pButton icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
         </div>
     </ng-template>
 </p-menubar>
 
-<!-- <p-drawer [(visible)]="drawerVisible" [position]="'left'" [modal]="true" [baseZIndex]="10000">
-    <app-sidebar></app-sidebar>
-</p-drawer> -->
+<p-drawer [(visible)]="drawerVisible" position="left" [modal]="true" [baseZIndex]="10000">
+    <!-- <div class="sidebar-header">
+    <p-avatar *ngIf="profilePictureUrl; else defaultAvatar" [image]="profilePictureUrl" shape="circle" size="large"></p-avatar>
+    <ng-template #defaultAvatar>
+      <p-avatar icon="pi pi-user" shape="circle" size="large"></p-avatar>
+    </ng-template>
+    <h1>a</h1>
+
+
+  </div> -->
+    <div class="sidebar-header">
+        <p-avatar [image]="profilePictureUrl" shape="circle" class="avatar-grande"
+            (click)="showUploadDialog()"></p-avatar>
+        <span class="username">{{ 'Daniel' }}</span>
+    </div>
+
+    <p-dialog [(visible)]="displayUploadDialog" header="Actualizar Foto de Perfil" [modal]="true" [closable]="true">
+        <p-fileUpload mode="basic" name="profileImage" accept="image/*" [maxFileSize]="1000000"
+            (onSelect)="onUpload($event)" chooseLabel="Seleccionar Imagen"></p-fileUpload>
+    </p-dialog>
+    <div styles="padding:5px">
+        <p-menu [model]="items" />
+    </div>
+</p-drawer>
+
+<!-- <app-sidebar [drawerVisible]="drawerVisible"></app-sidebar> -->
