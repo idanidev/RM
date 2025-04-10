@@ -1,3 +1,7 @@
-<p-toast></p-toast>
-<router-outlet></router-outlet>
-
+<div *ngIf="loaderService.loading$| async" class="spinner-overlay surface-ground">
+    <div class="spinner-kettlebell"></div>
+</div>
+<div *ngIf="!(loaderService.loading$ | async)">
+    <p-toast></p-toast>
+    <router-outlet></router-outlet>
+</div>

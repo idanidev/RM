@@ -15,6 +15,14 @@ html {
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+html.theme-light .spinner-overlay {
+  background-color: #ffffff; /* Fondo claro */
+}
+
+html.theme-dark .spinner-overlay {
+  background-color: #121212; /* Fondo oscuro */
+}
+
 body {
   margin: 0;
   padding: 2rem;
@@ -24,6 +32,7 @@ body {
   font-weight: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // background-color: var(--p-surface-0, #ffffff);
   background: light-dark(var(--p-surface-0), var(--p-surface-950));
 }
 
@@ -75,13 +84,30 @@ body {
   }
 }
 
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  background-color: var(--p-surface-ground, #ffffff);
+}
+
 .spinner-kettlebell {
-  width: 100px;
-  /* Ajusta el tamaño según sea necesario */
-  height: 100px;
+  width: 150px;
+  height: 150px;
   background-image: url('assets/images/kettlebell.png');
-  /* Ruta a tu imagen de kettlebell */
   background-size: contain;
   background-repeat: no-repeat;
   animation: girar 1s linear infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .spinner-overlay {
+    background-color: #121212; /* Fondo oscuro para usuarios con modo oscuro */
+  }
 }

@@ -1,3 +1,4 @@
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -8,10 +9,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { ToastModule } from 'primeng/toast';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 export const appConfig: ApplicationConfig = {
+
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
+  { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
   provideHttpClient(),
   provideRouter(routes),
     ConfirmationService,

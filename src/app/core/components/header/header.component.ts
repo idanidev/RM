@@ -32,10 +32,13 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
 
     const savedDarkMode = localStorage.getItem('darkMode');
-    if (savedDarkMode !== null) {
-      this.darkMode = JSON.parse(savedDarkMode);
-      const element = document.querySelector('html');
-      element?.classList.toggle('my-app-dark', this.darkMode);
+    this.darkMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
+
+    const element = document.querySelector('html');
+    if (this.darkMode) {
+      element?.classList.add('my-app-dark');
+    } else {
+      element?.classList.remove('my-app-dark');
     }
 
     this.items = [
@@ -79,9 +82,13 @@ export class HeaderComponent implements OnInit {
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     const element = document.querySelector('html');
-    element?.classList.toggle('my-app-dark', this.darkMode);
 
-    // Guarda el estado del tema en localStorage
+    if (this.darkMode) {
+      element?.classList.add('my-app-dark');
+    } else {
+      element?.classList.remove('my-app-dark');
+    }
+
     localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
   }
 
