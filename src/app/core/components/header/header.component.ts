@@ -47,11 +47,13 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'RMs',
-            icon: 'pi pi-home'
+            icon: 'pi pi-home',
+            routerLink: ['/home']
           },
           {
             label: 'Entrenamientos',
-            icon: 'pi pi-stopwatch'
+            icon: 'pi pi-stopwatch',
+            routerLink: ['/entrenamientos']
           }
         ]
       },
@@ -64,7 +66,8 @@ export class HeaderComponent implements OnInit {
           },
           {
             label: 'Logout',
-            icon: 'pi pi-sign-out'
+            icon: 'pi pi-sign-out',
+            command: () => this.logout() 
           }
         ]
       }
