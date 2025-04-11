@@ -150,6 +150,7 @@ export class RmListComponent implements OnInit {
 
       this.cerrarDialogo();
       await this.obtenerEjercicios();
+      this.errorNotificationService.showSuccess('Guardado', 'RM guardado correctamente.');
 
     } catch (error) {
       this.errorNotificationService.showError('Error', 'Ocurrió un error al procesar la solicitud.');
@@ -181,9 +182,9 @@ export class RmListComponent implements OnInit {
     }
   }
 
-  confirmarEliminacion(ejercicio: any) {
+  confirmarEliminacion(ejercicio: any, event?: Event) {
     this.confirmationService.confirm({
-      // target: event.target as EventTarget,
+      target: event?.currentTarget as HTMLElement,
       message: '¿Estás seguro de que deseas eliminar este elemento?',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí',

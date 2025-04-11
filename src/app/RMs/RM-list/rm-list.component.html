@@ -7,7 +7,7 @@
     responsiveLayout="scroll" breakpoint="960px">
     <ng-template #caption>
         <div class="flex align-items-center gap-2">
-            <p-button class="flex-shrink-0">
+            <p-button class="flex-shrink-0" (onClick)="nuevoEjercicio()" >
                 <ng-template pTemplate="content">
                     <i class="pi pi-plus"></i>
                     <span class="hidden md:inline">Nuevo</span>
@@ -57,7 +57,7 @@
 
                     <p-toast></p-toast>
                     <p-confirmpopup></p-confirmpopup>
-                    <p-button icon="pi pi-trash" (onClick)="confirmarEliminacion(ejercicio)"
+                    <p-button icon="pi pi-trash" (onClick)="confirmarEliminacion(ejercicio, $event)"
                         styleClass="p-button-rounded p-button-text" severity="danger" [outlined]="true"></p-button>
                 </div>
                 <div class="acciones-pequenas">

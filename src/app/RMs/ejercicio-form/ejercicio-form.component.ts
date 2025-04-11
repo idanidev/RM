@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ejercicio-form',
-  imports: [DialogModule, ButtonModule, ReactiveFormsModule, FloatLabelModule, CardModule, CommonModule, FormsModule ],
+  imports: [DialogModule, ButtonModule, ReactiveFormsModule, FloatLabelModule, CardModule, CommonModule, FormsModule],
   standalone: true,
   templateUrl: './ejercicio-form.component.html',
   styleUrl: './ejercicio-form.component.scss'
@@ -20,6 +19,7 @@ export class EjercicioFormComponent {
   @Output() cancel = new EventEmitter<void>();
 
   ejercicioForm!: FormGroup;
+  loading = false;
 
   constructor(private fb: FormBuilder) { }
 
@@ -41,11 +41,19 @@ export class EjercicioFormComponent {
     return this.ejercicioForm?.get('rm');
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.ejercicioForm.valid) {
-      this.save.emit(this.ejercicioForm.value);
+      this.loading = true;
+      try {
+        await this.save.emit(this.ejercicioForm.value);
+      } catch (error) {
+        
+      } finally {
+        this.loading = false;
+      }
     }
   }
+
 
   onCancel() {
     this.cancel.emit();
