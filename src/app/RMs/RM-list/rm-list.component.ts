@@ -34,7 +34,7 @@ export class RmListComponent implements OnInit {
   @ViewChild(RmChartComponent) rmChartComponent!: RmChartComponent;
   @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
 
-  acciones: { label: string, icon: string, command: () => void }[];
+  acciones: { label: string, icon: string, command: (event?: Event) => void }[];
   rmInput: number = 0;
   selectedRmData: any[] = [];
   displayChart: boolean = false;
@@ -54,7 +54,7 @@ export class RmListComponent implements OnInit {
     this.acciones = [
       { label: 'Visualizar', icon: 'pi pi-chart-line', command: () => this.visualizarEjercicio(this.ejercicioSeleccionado) },
       { label: 'Añadir', icon: 'pi pi-plus', command: () => { if (this.ejercicioSeleccionado) this.editarEjercicio(this.ejercicioSeleccionado); } },
-      { label: 'Eliminar', icon: 'pi pi-trash', command: () => { if (this.ejercicioSeleccionado) this.confirmarEliminacion(this.ejercicioSeleccionado); } }
+      { label: 'Eliminar', icon: 'pi pi-trash', command: (event?: Event) => { if (this.ejercicioSeleccionado) this.confirmarEliminacion(this.ejercicioSeleccionado, event); } }
     ];
   }
 

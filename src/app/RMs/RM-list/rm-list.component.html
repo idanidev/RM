@@ -30,12 +30,14 @@
         <tr>
             <!-- Acciones siempre visibles, al principio -->
             <td class="none-width">
+                <p-toast></p-toast>
+                <p-confirmpopup></p-confirmpopup>
                 <p-button icon="pi pi-ellipsis-v" (click)="seleccionarEjercicio(ejercicio); overlayPanel.toggle($event)"
                     styleClass="p-button-rounded p-button-text"></p-button>
                 <p-overlaypanel #overlayPanel styleClass="w-12rem">
                     <div *ngFor="let accion of acciones">
                         <p-button [label]="accion.label" [icon]="accion.icon"
-                            (click)="accion.command(); overlayPanel.hide()"
+                            (click)="accion.command($event); overlayPanel.hide()"
                             styleClass="p-button-text w-full text-left"></p-button>
                     </div>
                 </p-overlaypanel>
