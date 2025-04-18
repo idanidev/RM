@@ -1,13 +1,8 @@
-<!-- <p-toolbar styleClass="mb-6">
-    <ng-template #start>
-        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="nuevoEjercicio()" />
-    </ng-template>
-</p-toolbar> -->
 <p-table #dt [value]="ejercicios" [globalFilterFields]="['name']" [rowHover]="true" [paginator]="true" [rows]="10"
     responsiveLayout="scroll" breakpoint="960px">
     <ng-template #caption>
         <div class="flex align-items-center gap-2">
-            <p-button class="flex-shrink-0" (onClick)="nuevoEjercicio()" >
+            <p-button class="flex-shrink-0" (onClick)="nuevoEjercicio()">
                 <ng-template pTemplate="content">
                     <i class="pi pi-plus"></i>
                     <span class="hidden md:inline">Nuevo</span>
@@ -21,57 +16,38 @@
             </p-iconfield>
         </div>
     </ng-template>
-∫   
 
-    <ng-template #caption>
-        <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-            <p-button icon="pi pi-plus" (onClick)="nuevoEjercicio()" class="lg:p-button-lg">
-                <span class="hidden sm:inline">Nuevo</span>
-            </p-button>
-            <p-iconfield>
-                <p-inputicon styleClass="pi pi-search" />
-                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                    placeholder="Buscar..." />
-            </p-iconfield>
-        </div>
-    </ng-template>
     <ng-template pTemplate="header">
         <tr>
+            <th class="none-width"></th>
             <th>Nombre</th>
             <th>RM</th>
             <th>Fecha</th>
-            <th>Acciones</th>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-ejercicio>
         <tr>
-            <td>{{ ejercicio.name }}</td>
+            <!-- Acciones siempre visibles, al principio -->
+            <td class="none-width">
+                <p-button icon="pi pi-ellipsis-v" (click)="seleccionarEjercicio(ejercicio); overlayPanel.toggle($event)"
+                    styleClass="p-button-rounded p-button-text"></p-button>
+                <p-overlaypanel #overlayPanel styleClass="w-12rem">
+                    <div *ngFor="let accion of acciones">
+                        <p-button [label]="accion.label" [icon]="accion.icon"
+                            (click)="accion.command(); overlayPanel.hide()"
+                            styleClass="p-button-text w-full text-left"></p-button>
+                    </div>
+                </p-overlaypanel>
+            </td>
+
+            <td>
+                <span class="cell-truncate" [pTooltip]="ejercicio.name" tooltipPosition="top">
+                    {{ ejercicio.name }}
+                </span>
+            </td>
             <td>{{ getUltimoRm(ejercicio, 'valor') }}</td>
             <td>{{ getUltimoRm(ejercicio, 'fecha') | date: 'dd/MM/yyyy' }}</td>
-            <td>
-                <div class="acciones-grandes">
-                    <p-button icon="pi pi-chart-line" (click)="visualizarEjercicio(ejercicio)"
-                        styleClass="p-button-rounded p-button-text"></p-button>
-                    <p-button icon="pi pi-plus" (click)="editarEjercicio(ejercicio)"
-                        styleClass="p-button-rounded p-button-text"></p-button>
-
-                    <p-toast></p-toast>
-                    <p-confirmpopup></p-confirmpopup>
-                    <p-button icon="pi pi-trash" (onClick)="confirmarEliminacion(ejercicio, $event)"
-                        styleClass="p-button-rounded p-button-text" severity="danger" [outlined]="true"></p-button>
-                </div>
-                <div class="acciones-pequenas">
-                    <p-button icon="pi pi-ellipsis-v"
-                        (click)="seleccionarEjercicio(ejercicio); overlayPanel.toggle($event)"
-                        styleClass="p-button-rounded p-button-text"></p-button>
-                    <p-overlaypanel #overlayPanel>
-                        <div *ngFor="let accion of acciones">
-                            <p-button [label]="accion.label" [icon]="accion.icon"
-                                (click)="accion.command(); overlayPanel.hide()" styleClass="p-button-text"></p-button>
-                        </div>
-                    </p-overlaypanel>
-                </div>
-            </td>
         </tr>
     </ng-template>
 </p-table>

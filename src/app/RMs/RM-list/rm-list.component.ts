@@ -19,12 +19,13 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
 import { InputIcon } from 'primeng/inputicon';
 import { IconField } from 'primeng/iconfield';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-rm-list',
   standalone: true,
-  imports: [TableModule, ButtonModule, ConfirmPopupModule,InputIcon, IconField,
-    ToastModule, DialogModule, InputTextModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule],
+  imports: [TableModule, ButtonModule, ConfirmPopupModule, InputIcon, IconField,
+    ToastModule, DialogModule, InputTextModule, TooltipModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule],
   templateUrl: './rm-list.component.html',
   styleUrl: './rm-list.component.scss'
 })

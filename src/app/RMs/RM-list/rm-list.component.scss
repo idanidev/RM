@@ -12,6 +12,7 @@ p-table {
   .acciones-grandes {
     display: none;
   }
+
   .acciones-pequenas {
     display: flex;
   }
@@ -20,20 +21,44 @@ p-table {
 /* Mejorar visualización de filas en móviles */
 @media (max-width: 960px) {
   .p-datatable-tbody tr {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      border-bottom: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid #333;
   }
 
   .p-datatable-tbody td {
-      flex: 1;
-      text-align: center;
+    flex: 1;
+    text-align: center;
   }
 
   .p-datatable-tbody td:last-child {
-      text-align: right;
+    text-align: right;
   }
+}
+
+.none-width {
+  width: 1px;
+  padding: 0;
+}
+
+th.none-width,
+td.none-width {
+  width: 1px !important;
+  min-width: 1px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cell-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }
