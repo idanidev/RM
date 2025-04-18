@@ -1,26 +1,26 @@
 <div class="form-container">
-  <p-card>
-    <form [formGroup]="ejercicioForm" (ngSubmit)="onSubmit()">
-      <div class="p-field">
-        <label for="name">Nombre del ejercicio</label>
-        <input pInputText id="name" formControlName="name" />
-        <small *ngIf="name?.invalid && name?.touched">
-          <span *ngIf="name?.errors?.['required']">El nombre es requerido.</span>
-          <span *ngIf="name?.errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
-        </small>
-      </div>
-
-      <div class="p-field">
-        <label for="rm">RM (Repetición máxima) KG</label>
-        <input pInputText type="number" id="rm" formControlName="rm" />
-        <small *ngIf="rm?.invalid && rm?.touched">
-          <span *ngIf="rm?.errors?.['required']">El RM es requerido.</span>
-          <span *ngIf="rm?.errors?.['min']">Debe ser un número mayor a 0.</span>
-        </small>
-      </div>
-
-      <p-button [loading]="loading" type="submit" label="Guardar" icon="pi pi-check"
-        [disabled]="ejercicioForm.invalid"></p-button>
-    </form>
-  </p-card>
-</div>
+    <p-card>
+      <form [formGroup]="ejercicioForm" (ngSubmit)="onSubmit()">
+        <div class="p-field">
+          <label for="name">Nombre del ejercicio</label>
+          <input pInputText id="name" formControlName="name" />
+          <small *ngIf="name?.invalid && name?.touched">
+            <span *ngIf="name?.errors?.['required']">El nombre es requerido.</span>
+            <span *ngIf="name?.errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
+          </small>
+        </div>
+  
+        <div class="p-field">
+          <label for="rm">RM (Repetición máxima) KG</label>
+          <input pInputText type="number" id="rm" formControlName="rm" />
+          <small *ngIf="rm?.invalid && rm?.touched">
+            <span *ngIf="rm?.errors?.['required']">El RM es requerido.</span>
+            <span *ngIf="rm?.errors?.['min']">Debe ser un número mayor a 0.</span>
+          </small>
+        </div>
+  
+        <p-button [loading]="loading" type="submit" label="Guardar" icon="pi pi-check" [disabled]="ejercicioForm.invalid"></p-button>
+      </form>
+    </p-card>
+  </div>
+  

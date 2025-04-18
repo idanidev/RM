@@ -4,30 +4,29 @@ import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from './core/service/auth.service';
 import { LoaderService } from './core/service/loader.service';
+import { HeaderComponent } from './core/components/header/header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastModule, CommonModule],
+  imports: [RouterOutlet, ToastModule, CommonModule, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
 
-  constructor(private authService: AuthService,
+  logeado: boolean = false;
+  constructor(public authService: AuthService,
     public loaderService: LoaderService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.loaderService.show(); // Activa el spinner
+    this.loaderService.show();
     this.authService.checkSession().then(() => {
-      // Lógica adicional si la sesión es válida
-      this.loaderService.hide(); // Desactiva el spinner
+      this.loaderService.hide();
     }).catch((error) => {
-      // Manejo de errores si la verificación de sesión falla
-      this.loaderService.hide(); // Desactiva el spinner
-      // Opcional: redirigir al login u otra acción
+      this.loaderService.hide();
     });
   }
 }

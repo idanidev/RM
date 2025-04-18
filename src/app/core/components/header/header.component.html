@@ -4,15 +4,16 @@
     </ng-template>
     <ng-template pTemplate="end">
         <div class="header-actions">
-            <button pButton icon="pi" [icon]="darkMode ? 'pi pi-sun' : 'pi pi-moon'" (click)="toggleDarkMode()"
-                class="p-button-text"></button>
+            <p-button pButton icon="pi" [icon]="darkMode ? 'pi pi-sun' : 'pi pi-moon'" (click)="toggleDarkMode()"
+                class="p-button-text"></p-button>
             <!-- <button pButton icon="pi pi-cog" (click)="openSettings()" class="p-button-text"></button> -->
-            <div class="flex-auto">
+            <!-- <div class="flex-auto">
                 <p-overlay-badge badgeSize="small" value="4" severity="danger" class="inline-flex">
                     <p-avatar class="p-overlay-badge"
                         image="https://primefaces.org/cdn/primeng/images/demo/avatar/walter.jpg" size="normal" />
                 </p-overlay-badge>
-            </div> <button pButton icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
+            </div>  -->
+            <button pButton icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
         </div>
     </ng-template>
 </p-menubar>
