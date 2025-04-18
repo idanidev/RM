@@ -55,10 +55,10 @@ td.none-width {
 }
 
 .cell-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: block;
   padding: 4px;
-  display: inline-block;
-  vertical-align: middle;
+  line-height: 1.4;
 }
