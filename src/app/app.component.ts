@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
+import { HeaderComponent } from './core/components/header/header.component';
 import { AuthService } from './core/service/auth.service';
 import { LoaderService } from './core/service/loader.service';
-import { HeaderComponent } from './core/components/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +23,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loaderService.show();
+    this.authService.loggedIn.subscribe((loggedIn) => {
+      this.logeado = loggedIn;
+    });
     this.authService.checkSession().then(() => {
       this.loaderService.hide();
     }).catch((error) => {

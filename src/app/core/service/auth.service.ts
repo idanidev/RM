@@ -9,13 +9,12 @@ import { ErrorNotificationService } from './ErrorNotification.service';
 })
 export class AuthService {
 
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  isLoggedIn = this.loggedIn.asObservable();
-  
+  loggedIn = new BehaviorSubject<boolean>(false);
+
   constructor(
     private router: Router,
     private errorService: ErrorNotificationService
-  ) {}
+  ) { }
 
   async register(email: string, password: string, name: string): Promise<void> {
     try {

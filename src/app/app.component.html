@@ -1,10 +1,8 @@
-<div *ngIf="loaderService.loading$| async" class="spinner-overlay surface-ground">
+<div *ngIf="loaderService.loading$ | async" class="spinner-overlay surface-ground">
     <div class="spinner-kettlebell"></div>
 </div>
 <div *ngIf="!(loaderService.loading$ | async)">
-    <div *ngIf="authService.isLoggedIn | async">
-        <app-header></app-header>
-    </div>
+    <app-header *ngIf="logeado"></app-header>
     <p-toast></p-toast>
     <router-outlet></router-outlet>
 </div>
