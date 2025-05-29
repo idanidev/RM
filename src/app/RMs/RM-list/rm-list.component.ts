@@ -27,7 +27,7 @@ import { EjercicioService } from './../../core/service/rm.service';
   selector: 'app-rm-list',
   standalone: true,
   imports: [TableModule, ButtonModule, ConfirmPopupModule, InputIcon, IconField,
-    ToastModule, DialogModule, AccordionModule,InputTextModule, TooltipModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule, PorcentajesComponent],
+    ToastModule, DialogModule, AccordionModule, InputTextModule, TooltipModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule, PorcentajesComponent],
   templateUrl: './rm-list.component.html',
   styleUrl: './rm-list.component.scss'
 })
@@ -35,8 +35,6 @@ export class RmListComponent implements OnInit {
 
   @ViewChild(RmChartComponent) rmChartComponent!: RmChartComponent;
   @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
-
-  expandedRowKeys: { [key: string]: boolean } = {};
 
   acciones: { label: string, icon: string, command: (event?: Event) => void }[];
   rmInput: number = 0;
@@ -97,6 +95,12 @@ export class RmListComponent implements OnInit {
   seleccionarEjercicio(ejercicio: any) {
     this.ejercicioSeleccionado = ejercicio;
   }
+
+  onAccionesClick(event: MouseEvent, ejercicio: any) {
+    event.stopPropagation();
+    this.seleccionarEjercicio(ejercicio);
+  }
+
 
   cerrarDialogo() {
     this.mostrarDialogo = false;

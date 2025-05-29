@@ -1,6 +1,6 @@
 <p-table #dt [value]="ejercicios" selectionMode="single" [globalFilterFields]="['name']" [rowHover]="true"
     [paginator]="true" [rows]="10" responsiveLayout="scroll" breakpoint="960px" dataKey="documentId"
-    class="tabla-ejercicios" [(selection)]="ejercicioSeleccionado" (selectionChange)="seleccionarEjercicio($event)">
+    class="tabla-ejercicios" (selectionChange)="seleccionarEjercicio($event)">
     <ng-template #caption>
         <div class="flex align-items-center gap-2">
             <p-button class="flex-shrink-0" (onClick)="nuevoEjercicio()">

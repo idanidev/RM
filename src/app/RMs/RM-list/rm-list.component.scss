@@ -4,40 +4,6 @@ p-table {
   margin-bottom: 1rem;
 }
 
-.acciones-pequenas {
-  display: none;
-}
-
-@media (max-width: 960px) {
-  .acciones-grandes {
-    display: none;
-  }
-
-  .acciones-pequenas {
-    display: flex;
-  }
-}
-
-/* Mejorar visualización de filas en móviles */
-@media (max-width: 960px) {
-  .p-datatable-tbody tr {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    border-bottom: 1px solid #333;
-  }
-
-  .p-datatable-tbody td {
-    flex: 1;
-    text-align: center;
-  }
-
-  .p-datatable-tbody td:last-child {
-    text-align: right;
-  }
-}
 
 .none-width {
   width: 1px;
@@ -76,7 +42,5 @@ p-dialog {
 .acordeon-contenedor {
   position: sticky;
   bottom: 0;
-  padding: 1rem;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 1;
 }
