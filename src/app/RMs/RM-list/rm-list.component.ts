@@ -1,31 +1,33 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AccordionModule } from 'primeng/accordion';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { TooltipModule } from 'primeng/tooltip';
 import { RmEntry } from '../../core/models/Ejercicio';
 import { ErrorNotificationService } from '../../core/service/ErrorNotification.service';
 import { EjercicioFormComponent } from '../ejercicio-form/ejercicio-form.component';
+import { PorcentajesComponent } from "../porcentajes/porcentajes.component";
 import { RmChartComponent } from "../rm-chart/rm-chart/rm-chart.component";
 import { Ejercicio } from './../../core/models/Ejercicio';
 import { EjercicioService } from './../../core/service/rm.service';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ToastModule } from 'primeng/toast';
-import { InputIcon } from 'primeng/inputicon';
-import { IconField } from 'primeng/iconfield';
-import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-rm-list',
   standalone: true,
   imports: [TableModule, ButtonModule, ConfirmPopupModule, InputIcon, IconField,
-    ToastModule, DialogModule, InputTextModule, TooltipModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule],
+    ToastModule, DialogModule, AccordionModule,InputTextModule, TooltipModule, FormsModule, CommonModule, RmChartComponent, OverlayPanelModule, EjercicioFormComponent, ToolbarModule, MenuModule, PorcentajesComponent],
   templateUrl: './rm-list.component.html',
   styleUrl: './rm-list.component.scss'
 })
@@ -33,6 +35,8 @@ export class RmListComponent implements OnInit {
 
   @ViewChild(RmChartComponent) rmChartComponent!: RmChartComponent;
   @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
+
+  expandedRowKeys: { [key: string]: boolean } = {};
 
   acciones: { label: string, icon: string, command: (event?: Event) => void }[];
   rmInput: number = 0;
@@ -49,12 +53,12 @@ export class RmListComponent implements OnInit {
     private appwriteService: EjercicioService,
     private errorNotificationService: ErrorNotificationService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {
     this.acciones = [
       { label: 'Visualizar', icon: 'pi pi-chart-line', command: () => this.visualizarEjercicio(this.ejercicioSeleccionado) },
       { label: 'Añadir', icon: 'pi pi-plus', command: () => { if (this.ejercicioSeleccionado) this.editarEjercicio(this.ejercicioSeleccionado); } },
-      { label: 'Eliminar', icon: 'pi pi-trash', command: (event?: Event) => { if (this.ejercicioSeleccionado) this.confirmarEliminacion(this.ejercicioSeleccionado, event); } }
+      { label: 'Eliminar', icon: 'pi pi-trash', command: (event?: Event) => { if (this.ejercicioSeleccionado) this.confirmarEliminacion(this.ejercicioSeleccionado, event); } },
     ];
   }
 
@@ -200,5 +204,4 @@ export class RmListComponent implements OnInit {
       }
     });
   }
-
 }

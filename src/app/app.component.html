@@ -2,7 +2,7 @@
     <div class="spinner-kettlebell"></div>
 </div>
 <div *ngIf="!(loaderService.loading$ | async)">
-    <app-header *ngIf="logeado"></app-header>
+    <app-header *ngIf="!isAuthRoute() && authService.loggedIn()"></app-header>
     <p-toast></p-toast>
     <router-outlet></router-outlet>
 </div>

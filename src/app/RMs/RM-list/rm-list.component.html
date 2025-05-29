@@ -1,5 +1,6 @@
-<p-table #dt [value]="ejercicios" [globalFilterFields]="['name']" [rowHover]="true" [paginator]="true" [rows]="10"
-    responsiveLayout="scroll" breakpoint="960px">
+<p-table #dt [value]="ejercicios" selectionMode="single" [globalFilterFields]="['name']" [rowHover]="true"
+    [paginator]="true" [rows]="10" responsiveLayout="scroll" breakpoint="960px" dataKey="documentId"
+    class="tabla-ejercicios" [(selection)]="ejercicioSeleccionado" (selectionChange)="seleccionarEjercicio($event)">
     <ng-template #caption>
         <div class="flex align-items-center gap-2">
             <p-button class="flex-shrink-0" (onClick)="nuevoEjercicio()">
@@ -26,12 +27,10 @@
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-ejercicio>
-        <tr>
+    <ng-template pTemplate="body" let-ejercicio let-expanded="expanded">
+        <tr [pSelectableRow]="ejercicio">
             <!-- Acciones siempre visibles, al principio -->
             <td class="none-width">
-                <p-toast></p-toast>
-                <p-confirmpopup></p-confirmpopup>
                 <p-button icon="pi pi-ellipsis-v" (click)="seleccionarEjercicio(ejercicio); overlayPanel.toggle($event)"
                     styleClass="p-button-rounded p-button-text"></p-button>
                 <p-overlaypanel #overlayPanel styleClass="w-12rem">
@@ -44,7 +43,8 @@
             </td>
 
             <td>
-                <span class="block md:inline md:whitespace-nowrap cell-truncate" [pTooltip]="ejercicio.name" tooltipPosition="top">
+                <span class="block md:inline md:whitespace-nowrap cell-truncate" [pTooltip]="ejercicio.name"
+                    tooltipPosition="top">
                     {{ ejercicio.name }}
                 </span>
             </td>
@@ -66,3 +66,18 @@
     (onHide)="displayChart = false">
     <app-rm-chart [rmData]="selectedRmData"></app-rm-chart>
 </p-dialog>
+
+
+<p-accordion *ngIf="ejercicioSeleccionado" class="acordeon-contenedor">
+    <p-accordionTab [header]="ejercicioSeleccionado.name">
+        <div>
+            <strong>RM:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'valor') }}<br>
+            <strong>Fecha:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'fecha') | date: 'dd/MM/yyyy' }}
+        </div>
+        <app-porcentajes [ejercicio]="ejercicioSeleccionado"></app-porcentajes>
+    </p-accordionTab>
+</p-accordion>
+
+
+<p-toast></p-toast>
+<p-confirmpopup></p-confirmpopup>

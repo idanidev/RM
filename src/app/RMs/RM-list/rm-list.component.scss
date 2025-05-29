@@ -66,3 +66,17 @@ td.none-width {
 p-dialog {
   touch-action: manipulation;
 }
+
+.tabla-ejercicios {
+  max-height: 70vh;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.acordeon-contenedor {
+  position: sticky;
+  bottom: 0;
+  padding: 1rem;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}

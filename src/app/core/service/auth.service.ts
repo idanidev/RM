@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { account, ID } from '../interceptors/appwrite';
 import { ErrorNotificationService } from './ErrorNotification.service';
 
@@ -9,13 +8,20 @@ import { ErrorNotificationService } from './ErrorNotification.service';
 })
 export class AuthService {
 
-  loggedIn = new BehaviorSubject<boolean>(false);
+  // Signal para el estado de autenticación
+  loggedIn: WritableSignal<boolean> = signal(false);
 
   constructor(
     private router: Router,
     private errorService: ErrorNotificationService
-  ) { }
+  ) {
+    // Efecto para observar cambios en el estado de autenticación
+    effect(() => {
+      console.log('Estado de autenticación:', this.loggedIn());
+    });
+  }
 
+  // Registro de usuario
   async register(email: string, password: string, name: string): Promise<void> {
     if (!name || !email || !password) {
       this.errorService.showWarn('Registro incompleto', 'Por favor, completa todos los campos.');
@@ -33,14 +39,12 @@ export class AuthService {
     }
   }
 
+  // Inicio de sesión
   async login(email: string, password: string): Promise<void> {
     try {
-      // Elimina cualquier sesión existente antes de iniciar una nueva
       await this.clearCurrentSession();
-
-      // Crea una nueva sesión
       await account.createEmailPasswordSession(email, password);
-      this.loggedIn.next(true);
+      this.loggedIn.set(true);
       this.router.navigate(['/']);
       this.errorService.showSuccess('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
     } catch (error: any) {
@@ -50,10 +54,11 @@ export class AuthService {
     }
   }
 
+  // Cerrar sesión
   async logout(): Promise<void> {
     try {
       await account.deleteSession('current');
-      this.loggedIn.next(false);
+      this.loggedIn.set(false);
       this.router.navigate(['/login']);
       this.errorService.showInfo('Sesión cerrada', 'Has cerrado sesión correctamente.');
     } catch (error: any) {
@@ -63,14 +68,15 @@ export class AuthService {
     }
   }
 
+  // Comprobar sesión actual
   async checkSession(): Promise<void> {
     try {
       const user = await account.get();
-      this.loggedIn.next(true);
+      this.loggedIn.set(true);
       console.log('Sesión activa encontrada para el usuario:', user);
     } catch (error: any) {
       if (error.code === 401) {
-        this.loggedIn.next(false);
+        this.loggedIn.set(false);
         console.log('No se encontró una sesión activa.');
       } else {
         const detail = error?.message || 'Ocurrió un error inesperado al verificar la sesión.';
@@ -80,10 +86,12 @@ export class AuthService {
     }
   }
 
+  // Obtener el usuario actual
   getCurrentUser() {
     return account.get();
   }
 
+  // Limpiar la sesión actual
   private async clearCurrentSession(): Promise<void> {
     try {
       const session = await account.getSession('current');
