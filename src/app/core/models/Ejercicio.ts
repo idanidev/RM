@@ -9,3 +9,11 @@ export interface Ejercicio {
   rm: string[];
   descripcion?: string;
 }
+
+export interface Entrenamiento{
+  id?: string;
+  nombre: string;
+  descripcion: string;
+  duracion?: string;
+}
+

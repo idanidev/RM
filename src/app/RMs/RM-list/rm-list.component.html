@@ -67,16 +67,17 @@
     <app-rm-chart [rmData]="selectedRmData"></app-rm-chart>
 </p-dialog>
 
-
-<p-accordion *ngIf="ejercicioSeleccionado" class="acordeon-contenedor">
-    <p-accordionTab [header]="ejercicioSeleccionado.name">
-        <div>
-            <strong>RM:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'valor') }}<br>
-            <strong>Fecha:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'fecha') | date: 'dd/MM/yyyy' }}
-        </div>
-        <app-porcentajes [ejercicio]="ejercicioSeleccionado"></app-porcentajes>
-    </p-accordionTab>
-</p-accordion>
+<div #AcordenonRM>
+  <p-accordion *ngIf="ejercicioSeleccionado" class="acordeon-contenedor" [activeIndex]="activeAccordionIndex">
+    <p-accordionTab rdionTab [header]="ejercicioSeleccionado.name">
+          <div>
+              <strong>RM:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'valor') }}<br>
+              <strong>Fecha:</strong> {{ getUltimoRm(ejercicioSeleccionado, 'fecha') | date: 'dd/MM/yyyy' }}
+          </div>
+          <app-porcentajes [ejercicio]="ejercicioSeleccionado"></app-porcentajes>
+      </p-accordionTab>
+  </p-accordion>
+</div>
 
 
 <p-toast></p-toast>

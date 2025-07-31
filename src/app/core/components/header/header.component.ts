@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
   profilePictureUrl: string = '';
   displayUploadDialog: boolean = false;
   items: MenuItem[] | undefined;
+  nombreUsuario = computed(() => this.authService.user()?.name ?? '');
 
   constructor(private authService: AuthService,) {
     this.profilePictureUrl = 'assets/images/profile.png';
@@ -47,13 +48,23 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'RMs',
-            icon: 'pi pi-home',
-            routerLink: ['/home']
+            icon: 'pi pi-chart-line',
+            routerLink: ['/home'],
+            command: () => this.drawerVisible = false
           },
           {
             label: 'Entrenamientos',
             icon: 'pi pi-stopwatch',
-            routerLink: ['/entrenamientos']
+            routerLink: ['/entrenamientos'],
+            command: () => this.drawerVisible = false,
+            disabled: true //TODO: Habilitar cuando se implemente la página de entrenamientos
+          },
+          {
+            label: 'GYM',
+            icon: 'pi pi-calendar',
+            routerLink: ['/entrenamientos'],
+            command: () => this.drawerVisible = false,
+            disabled: true //TODO: Habilitar cuando se implemente la página de gym
           }
         ]
       },
@@ -62,12 +73,13 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'Settings',
-            icon: 'pi pi-cog'
+            icon: 'pi pi-cog',
+            disabled: true,
           },
           {
             label: 'Logout',
             icon: 'pi pi-sign-out',
-            command: () => this.logout() 
+            command: () => this.logout()
           }
         ]
       }
@@ -106,7 +118,6 @@ export class HeaderComponent implements OnInit {
     reader.onload = () => {
       this.profilePictureUrl = reader.result as string;
       this.displayUploadDialog = false;
-      // Aquí puedes agregar la lógica para enviar la imagen al servidor
     };
   }
 

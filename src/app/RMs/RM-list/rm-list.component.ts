@@ -35,6 +35,7 @@ export class RmListComponent implements OnInit {
 
   @ViewChild(RmChartComponent) rmChartComponent!: RmChartComponent;
   @ViewChild(EjercicioFormComponent) ejercicioFormComp!: EjercicioFormComponent;
+  @ViewChild('AcordenonRM') acordeonRM!: any;
 
   acciones: { label: string, icon: string, command: (event?: Event) => void }[];
   rmInput: number = 0;
@@ -46,6 +47,8 @@ export class RmListComponent implements OnInit {
   mostrarDialogo: boolean = false;
   ejercicioSeleccionado: Ejercicio | null = null;
   ultimoRm: RmEntry | null = null;
+
+  activeAccordionIndex: number | number[] = 0;
 
   constructor(
     private appwriteService: EjercicioService,
@@ -94,6 +97,14 @@ export class RmListComponent implements OnInit {
 
   seleccionarEjercicio(ejercicio: any) {
     this.ejercicioSeleccionado = ejercicio;
+    this.activeAccordionIndex = 0;
+
+      // Esperamos al siguiente ciclo para que el DOM actualice
+  setTimeout(() => {
+    if (this.acordeonRM?.nativeElement) {
+      this.acordeonRM.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 0);
   }
 
   onAccionesClick(event: MouseEvent, ejercicio: any) {

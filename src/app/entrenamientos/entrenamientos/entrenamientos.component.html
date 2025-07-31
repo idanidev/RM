@@ -1,0 +1,87 @@
+<p-table #dt [value]="entrenamientos" [globalFilterFields]="['nombre']"
+  [rowHover]="true" [paginator]="true"
+  [rows]="10" responsiveLayout="scroll" dataKey="id" selectionMode="single"
+  (selectionChange)="seleccionarEntrenamiento($event)" class="tabla-ejercicios">
+  <ng-template #caption>
+    <div class="flex align-items-center gap-2">
+      <p-button class="flex-shrink-0" (onClick)="nuevoEntrenamiento()">
+        <ng-template pTemplate="content">
+          <i class="pi pi-plus"></i>
+          <span class="hidden md:inline">Nuevo</span>
+        </ng-template>
+      </p-button>
+
+      <p-iconfield class="flex-grow-1 max-w-20rem">
+        <p-inputicon styleClass="pi pi-search" />
+        <input pInputText type="text"
+          (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Buscar..." class="w-full" />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="none-width"></th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Duración</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-entrenamiento>
+    <tr [pSelectableRow]="entrenamiento">
+      <td class="none-width">
+        <p-button icon="pi pi-ellipsis-v"
+          (click)="seleccionarEntrenamiento(entrenamiento); overlay.toggle($event)"
+          styleClass="p-button-rounded p-button-text"></p-button>
+        <p-overlaypanel #overlay styleClass="w-12rem">
+          <p-button label="Editar" icon="pi pi-pencil"
+            styleClass="p-button-text w-full text-left"
+            (click)="editarEntrenamiento(entrenamiento); overlay.hide()"></p-button>
+          <p-button label="Eliminar" icon="pi pi-trash"
+            styleClass="p-button-text w-full text-left"
+            (click)="confirmarEliminar(entrenamiento); overlay.hide()"></p-button>
+        </p-overlaypanel>
+      </td>
+      <td>{{ entrenamiento.nombre }}</td>
+      <td>{{ entrenamiento.descripcion }}</td>
+      <td>{{ entrenamiento.duracion || '-' }}</td>
+    </tr>
+  </ng-template>
+
+</p-table>
+
+<!-- Diálogo de entrenamientos -->
+<p-dialog [(visible)]="mostrarDialogo" [modal]="true"
+  [style]="{ width: '60vw' }"
+  [header]="dialogHeader" (onHide)="cerrarDialogo()">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label>Nombre</label>
+      <input pInputText [(ngModel)]="entrenamientoSeleccionado.nombre" />
+    </div>
+    <div class="p-field">
+      <label>Descripción</label>
+      <textarea pInputTextarea
+        [(ngModel)]="entrenamientoSeleccionado.descripcion"></textarea>
+    </div>
+    <div class="p-field">
+      <label>Duración estimada</label>
+      <input pInputText [(ngModel)]="entrenamientoSeleccionado.duracion"
+        placeholder="Ej: 45 min" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button label="Cancelar" icon="pi pi-times" styleClass="p-button-text"
+        (click)="cerrarDialogo()"></p-button>
+      <p-button label="Guardar" icon="pi pi-check"
+        (click)="guardarEntrenamiento()"
+        [disabled]="!entrenamientoSeleccionado?.nombre || !entrenamientoSeleccionado?.descripcion"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmdialog></p-confirmdialog>

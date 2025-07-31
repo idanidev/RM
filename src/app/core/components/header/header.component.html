@@ -31,7 +31,7 @@
     <div class="sidebar-header">
         <p-avatar [image]="profilePictureUrl" shape="circle" class="avatar-grande"
             (click)="showUploadDialog()"></p-avatar>
-        <span class="username">{{ 'Daniel' }}</span>
+        <span class="username">{{ nombreUsuario() }}</span>
     </div>
 
     <p-dialog [(visible)]="displayUploadDialog" header="Actualizar Foto de Perfil" [modal]="true" [closable]="true">

@@ -2,6 +2,7 @@ import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { account, ID } from '../interceptors/appwrite';
 import { ErrorNotificationService } from './ErrorNotification.service';
+import { Models } from 'appwrite';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class AuthService {
 
   // Signal para el estado de autenticación
   loggedIn: WritableSignal<boolean> = signal(false);
+  user: WritableSignal<Models.User<{}> | null> = signal(null);
 
   constructor(
     private router: Router,
@@ -44,6 +46,8 @@ export class AuthService {
     try {
       await this.clearCurrentSession();
       await account.createEmailPasswordSession(email, password);
+      const currentUser = await this.getCurrentUser();
+      this.user.set(currentUser);
       this.loggedIn.set(true);
       this.router.navigate(['/']);
       this.errorService.showSuccess('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
@@ -73,6 +77,7 @@ export class AuthService {
     try {
       const user = await account.get();
       this.loggedIn.set(true);
+      this.user.set(user);
       console.log('Sesión activa encontrada para el usuario:', user);
     } catch (error: any) {
       if (error.code === 401) {
