@@ -7,7 +7,7 @@ import { Entrenamiento } from '../../core/models/Ejercicio';
   providedIn: 'root'
 })
 export class EntrenamientosService {
-  private readonly API_URL = 'https://all1fit-api.onrender.com/entrenamientos';
+  private readonly API_URL = 'https://api.all1fit.com/entrenamientos';
 
   constructor(private http: HttpClient) { }
 
