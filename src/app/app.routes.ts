@@ -3,12 +3,15 @@ import { HomeComponent } from './auth/home/home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { GymComponent } from './core/GYM/gym/gym.component';
 import { EntrenamientosComponent } from './entrenamientos/entrenamientos/entrenamientos.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-    { path: 'entrenamientos', component: EntrenamientosComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'entrenamientos', component: EntrenamientosComponent, canActivate: [AuthGuard] },
+  { path: 'gym', component: GymComponent, canActivate: [AuthGuard] },
+
 ];

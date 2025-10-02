@@ -1,0 +1,342 @@
+<div class="gym-container p-3">
+  <!-- Mensaje si no hay plan configurado -->
+  <div *ngIf="!planConfigurado" class="flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+    <i class="pi pi-calendar-plus text-6xl mb-4 text-primary"></i>
+    <h2 class="text-center mb-2">¡Configura tu plan de entrenamiento!</h2>
+    <p class="text-center text-color-secondary mb-4">
+      Selecciona los grupos musculares y días de la semana que quieres entrenar
+    </p>
+    <p-button
+      label="Configurar Plan"
+      icon="pi pi-cog"
+      size="large"
+      (onClick)="abrirConfiguracion()"></p-button>
+  </div>
+
+  <!-- Vista con plan configurado -->
+  <div *ngIf="planConfigurado">
+    <!-- Header con controles -->
+    <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center justify-content-between gap-2 mb-3">
+      <div class="flex gap-2 flex-wrap">
+        <p-button
+          [outlined]="vistaActual !== 'semanal'"
+          (onClick)="cambiarVista('semanal')"
+          styleClass="flex-1 md:flex-none">
+          <ng-template pTemplate="content">
+            <i class="pi pi-calendar"></i>
+            <span class="ml-2">Semanal</span>
+          </ng-template>
+        </p-button>
+
+        <p-button
+          [outlined]="vistaActual !== 'mensual'"
+          (onClick)="cambiarVista('mensual')"
+          styleClass="flex-1 md:flex-none">
+          <ng-template pTemplate="content">
+            <i class="pi pi-table"></i>
+            <span class="ml-2">Mensual</span>
+          </ng-template>
+        </p-button>
+      </div>
+
+      <p-button
+        (onClick)="abrirConfiguracion()"
+        [outlined]="true"
+        styleClass="w-full md:w-auto">
+        <ng-template pTemplate="content">
+          <i class="pi pi-cog"></i>
+          <span class="ml-2">Reconfigurar</span>
+        </ng-template>
+      </p-button>
+    </div>
+
+    <!-- Vista Semanal -->
+    <div *ngIf="vistaActual === 'semanal'" class="vista-semanal">
+      <div class="flex align-items-center justify-content-between mb-3">
+        <p-button
+          icon="pi pi-chevron-left"
+          [rounded]="true"
+          [text]="true"
+          (onClick)="semanaAnterior()"></p-button>
+
+        <h3 class="m-0 text-center flex-1">
+          <span class="hidden md:inline">Semana del </span>
+          {{ obtenerSemanaActual()[0] | date: 'dd/MM' }}
+          <span class="hidden md:inline"> al </span>
+          <span class="md:hidden"> - </span>
+          {{ obtenerSemanaActual()[6] | date: 'dd/MM/yyyy' }}
+        </h3>
+
+        <p-button
+          icon="pi pi-chevron-right"
+          [rounded]="true"
+          [text]="true"
+          (onClick)="semanaSiguiente()"></p-button>
+      </div>
+
+      <div class="grid">
+        <div
+          *ngFor="let dia of obtenerSemanaActual(); let i = index"
+          class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col">
+          <p-card
+            class="dia-card h-full"
+            [ngClass]="{
+              'dia-hoy': esHoy(dia),
+              'dia-futuro': esDiaFuturo(dia),
+              'dia-completado': obtenerEntrenamientoDia(dia)?.completado
+            }"
+            (click)="verDetalleEntrenamiento(dia)">
+            <ng-template pTemplate="header">
+              <div class="dia-header p-2 text-center">
+                <div class="dia-semana text-sm font-semibold">{{ diasSemana[i] }}</div>
+                <div class="dia-numero text-3xl font-bold">{{ dia | date: 'd' }}</div>
+              </div>
+            </ng-template>
+
+            <div class="dia-contenido p-2" *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
+              <div class="flex flex-wrap gap-2 mb-2">
+                <span
+                  *ngFor="let grupo of entrenamiento.grupos"
+                  class="grupo-badge text-xs px-2 py-1 border-round">
+                  {{ obtenerNombreGrupo(grupo) }}
+                </span>
+              </div>
+
+              <div class="flex justify-content-end">
+                <p-button
+                  [icon]="entrenamiento.completado ? 'pi pi-check-circle' : 'pi pi-circle'"
+                  [rounded]="true"
+                  [text]="true"
+                  [severity]="entrenamiento.completado ? 'success' : 'secondary'"
+                  (click)="marcarCompletado(entrenamiento, $event)"></p-button>
+              </div>
+            </div>
+
+            <div class="dia-vacio p-3 text-center" *ngIf="!obtenerEntrenamientoDia(dia)">
+              <i class="pi pi-moon text-4xl mb-2 text-400"></i>
+              <div class="text-sm text-color-secondary">Descanso</div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista Mensual -->
+    <div *ngIf="vistaActual === 'mensual'" class="vista-mensual">
+      <!-- Header del mes -->
+      <div class="flex align-items-center justify-content-between mb-3">
+        <p-button
+          icon="pi pi-chevron-left"
+          [rounded]="true"
+          [text]="true"
+          (onClick)="mesAnterior()"></p-button>
+
+        <h3 class="m-0 text-center flex-1 text-capitalize">
+          {{ obtenerNombreMes() }}
+        </h3>
+
+        <p-button
+          icon="pi pi-chevron-right"
+          [rounded]="true"
+          [text]="true"
+          (onClick)="mesSiguiente()"></p-button>
+      </div>
+
+      <!-- Grid del calendario -->
+      <div class="calendario-mensual">
+        <!-- Headers de días de la semana -->
+        <div class="calendario-header grid">
+          <div *ngFor="let dia of diasSemana" class="col text-center font-bold py-2">
+            <span class="hidden md:inline">{{ dia }}</span>
+            <span class="md:hidden">{{ dia.substring(0, 1) }}</span>
+          </div>
+        </div>
+
+        <!-- Días del mes -->
+        <div class="grid gap-2">
+          <div
+            *ngFor="let dia of obtenerDiasMes()"
+            class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col">
+            <p-card
+              class="dia-card-mensual h-full"
+              [ngClass]="{
+                'dia-hoy': esHoy(dia),
+                'dia-mes-anterior': !esMesActual(dia),
+                'dia-completado': obtenerEntrenamientoDia(dia)?.completado
+              }"
+              (click)="esMesActual(dia) && verDetalleEntrenamiento(dia)">
+
+              <ng-template pTemplate="header">
+                <div class="dia-header-mensual p-2 text-center">
+                  <div class="dia-numero-mensual text-xl font-bold">
+                    {{ dia | date: 'd' }}
+                  </div>
+                </div>
+              </ng-template>
+
+              <div class="dia-contenido-mensual p-2" *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
+                <div class="flex flex-wrap gap-1">
+                  <span
+                    *ngFor="let grupo of entrenamiento.grupos"
+                    class="grupo-badge-small text-xs px-2 py-1 border-round">
+                    {{ obtenerNombreGrupo(grupo).substring(0, 3) }}
+                  </span>
+                </div>
+
+                <div class="flex justify-content-end mt-1" *ngIf="esMesActual(dia)">
+                  <i
+                    [class]="entrenamiento.completado ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-400'"
+                    class="text-sm"></i>
+                </div>
+              </div>
+
+              <div class="dia-vacio-mensual p-2 text-center" *ngIf="!obtenerEntrenamientoDia(dia) && esMesActual(dia)">
+                <i class="pi pi-moon text-400 text-sm"></i>
+              </div>
+            </p-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Drawer de Configuración -->
+<p-drawer
+  [(visible)]="mostrarConfiguracion"
+  position="right"
+  [style]="{width: '90vw', 'max-width': '400px'}"
+  header="Configurar Plan de Entrenamiento">
+  <div class="flex flex-column gap-4 p-3">
+    <!-- Grupos musculares -->
+    <div class="field">
+      <label for="gruposMusculares" class="font-bold block mb-2">
+        ¿Qué grupos musculares quieres entrenar?
+      </label>
+      <p-multiSelect
+        [(ngModel)]="gruposSeleccionados"
+        [options]="gruposMusculares"
+        optionLabel="nombre"
+        placeholder="Selecciona grupos musculares"
+        display="chip"
+        styleClass="w-full">
+      </p-multiSelect>
+      <small class="block mt-2 text-color-secondary">
+        Selecciona los músculos que trabajarás en tu rutina
+      </small>
+    </div>
+
+    <!-- Días por semana -->
+    <div class="field">
+      <label for="diasSemana" class="font-bold block mb-2">
+        ¿Cuántos días a la semana?
+      </label>
+      <p-select
+        [(ngModel)]="diasPorSemana"
+        [options]="opcionesDias"
+        placeholder="Selecciona días"
+        styleClass="w-full" />
+      <small class="block mt-2 text-color-secondary">
+        El sistema distribuirá automáticamente los grupos en estos días
+      </small>
+    </div>
+
+    <!-- Resumen de selección -->
+    <div *ngIf="gruposSeleccionados.length > 0" class="p-3 border-round surface-border" style="border: 1px solid var(--surface-border);">
+      <div class="font-bold mb-2">✅ Has seleccionado:</div>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <span
+          *ngFor="let grupo of gruposSeleccionados"
+          class="grupo-badge text-xs px-2 py-1 border-round">
+          {{ grupo.nombre }}
+        </span>
+      </div>
+      <div class="text-sm text-color-secondary">
+        {{ diasPorSemana }} días por semana
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex gap-2 mt-2">
+      <p-button
+        label="Generar Plan"
+        icon="pi pi-check"
+        class="flex-1"
+        (onClick)="generarPlan()"></p-button>
+
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        severity="secondary"
+        [outlined]="true"
+        class="flex-1"
+        (onClick)="mostrarConfiguracion = false"></p-button>
+    </div>
+  </div>
+</p-drawer>
+
+<!-- Dialog para ver detalle del día -->
+<p-dialog
+  [(visible)]="mostrarDetalleDialog"
+  [modal]="true"
+  [style]="{width: '95vw', 'max-width': '600px'}"
+  [breakpoints]="{'960px': '75vw', '640px': '95vw'}"
+  [header]="'Entrenamiento - ' + (fechaDiaSeleccionado | date: 'EEEE, d MMMM yyyy')"
+  (onHide)="cerrarDetalle()">
+
+  <div *ngIf="diaSeleccionado" class="flex flex-column gap-3">
+    <!-- Grupos musculares -->
+    <div>
+      <h4 class="mt-0 mb-2">Grupos Musculares</h4>
+      <div class="flex flex-wrap gap-2">
+        <p-card
+          *ngFor="let grupo of diaSeleccionado.grupos"
+          class="flex-1"
+          styleClass="text-center">
+          <div class="text-2xl mb-2">💪</div>
+          <div class="font-bold">{{ obtenerNombreGrupo(grupo) }}</div>
+        </p-card>
+      </div>
+    </div>
+
+    <!-- Estado -->
+    <div class="flex align-items-center gap-3 p-3 border-round surface-border" style="border: 1px solid var(--surface-border);">
+      <i [class]="diaSeleccionado.completado ? 'pi pi-check-circle text-green-500 text-3xl' : 'pi pi-circle text-400 text-3xl'"></i>
+      <div class="flex-1">
+        <div class="font-bold mb-1">Estado del entrenamiento</div>
+        <div class="text-sm text-color-secondary">
+          {{ diaSeleccionado.completado ? '✅ Completado' : '⏳ Pendiente' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Notas -->
+    <div>
+      <h4 class="mt-0 mb-2">Notas</h4>
+      <p class="text-color-secondary m-0">
+        Aquí podrás agregar notas sobre tu entrenamiento, peso levantado, sensaciones, etc.
+        <em>(Próximamente)</em>
+      </p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex gap-2 justify-content-between flex-wrap">
+      <p-button
+        [label]="diaSeleccionado?.completado ? 'Marcar Pendiente' : 'Marcar Completado'"
+        [icon]="diaSeleccionado?.completado ? 'pi pi-circle' : 'pi pi-check'"
+        [severity]="diaSeleccionado?.completado ? 'secondary' : 'success'"
+        class="flex-1"
+        (onClick)="diaSeleccionado && marcarCompletado(diaSeleccionado); cerrarDetalle()"></p-button>
+
+      <p-button
+        label="Cerrar"
+        icon="pi pi-times"
+        [outlined]="true"
+        class="flex-1"
+        (onClick)="cerrarDetalle()"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

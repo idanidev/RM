@@ -62,9 +62,9 @@ export class HeaderComponent implements OnInit {
           {
             label: 'GYM',
             icon: 'pi pi-calendar',
-            routerLink: ['/entrenamientos'],
+            routerLink: ['/gym'],
             command: () => this.drawerVisible = false,
-            disabled: true //TODO: Habilitar cuando se implemente la página de gym
+            disabled: false //TODO: Habilitar cuando se implemente la página de gym
           }
         ]
       },
