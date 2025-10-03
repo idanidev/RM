@@ -1,29 +1,29 @@
 import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Models } from 'appwrite';
 import { account, ID } from '../interceptors/appwrite';
 import { ErrorNotificationService } from './ErrorNotification.service';
-import { Models } from 'appwrite';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  // Signal para el estado de autenticación
   loggedIn: WritableSignal<boolean> = signal(false);
   user: WritableSignal<Models.User<{}> | null> = signal(null);
+
+  isAdmin: WritableSignal<boolean> = signal(false);
 
   constructor(
     private router: Router,
     private errorService: ErrorNotificationService
   ) {
-    // Efecto para observar cambios en el estado de autenticación
     effect(() => {
       console.log('Estado de autenticación:', this.loggedIn());
+      console.log('Es admin:', this.isAdmin());
     });
   }
 
-  // Registro de usuario
   async register(email: string, password: string, name: string): Promise<void> {
     if (!name || !email || !password) {
       this.errorService.showWarn('Registro incompleto', 'Por favor, completa todos los campos.');
@@ -41,7 +41,6 @@ export class AuthService {
     }
   }
 
-  // Inicio de sesión
   async login(email: string, password: string): Promise<void> {
     try {
       await this.clearCurrentSession();
@@ -49,6 +48,9 @@ export class AuthService {
       const currentUser = await this.getCurrentUser();
       this.user.set(currentUser);
       this.loggedIn.set(true);
+
+      await this.checkAdminStatus();
+
       this.router.navigate(['/']);
       this.errorService.showSuccess('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
     } catch (error: any) {
@@ -58,11 +60,12 @@ export class AuthService {
     }
   }
 
-  // Cerrar sesión
   async logout(): Promise<void> {
     try {
       await account.deleteSession('current');
       this.loggedIn.set(false);
+      this.isAdmin.set(false);
+      this.user.set(null);
       this.router.navigate(['/login']);
       this.errorService.showInfo('Sesión cerrada', 'Has cerrado sesión correctamente.');
     } catch (error: any) {
@@ -72,16 +75,20 @@ export class AuthService {
     }
   }
 
-  // Comprobar sesión actual
   async checkSession(): Promise<void> {
     try {
       const user = await account.get();
       this.loggedIn.set(true);
       this.user.set(user);
+
+      // Verificar si es admin
+      await this.checkAdminStatus();
+
       console.log('Sesión activa encontrada para el usuario:', user);
     } catch (error: any) {
       if (error.code === 401) {
         this.loggedIn.set(false);
+        this.isAdmin.set(false);
         console.log('No se encontró una sesión activa.');
       } else {
         const detail = error?.message || 'Ocurrió un error inesperado al verificar la sesión.';
@@ -91,12 +98,36 @@ export class AuthService {
     }
   }
 
-  // Obtener el usuario actual
+  async checkAdminStatus(): Promise<void> {
+    try {
+      const user = await account.get();
+
+      // Opción 1: Usando Labels (recomendado)
+      const hasAdminLabel = user.labels?.includes('admin') || false;
+
+      // Opción 2: Usando Preferences (alternativa)
+      const hasAdminPref = user.prefs?.['isAdmin'] === true;
+
+      // Usar cualquiera de las dos
+      const admin = hasAdminLabel || hasAdminPref;
+
+      this.isAdmin.set(admin);
+      console.log('Estado admin:', admin);
+    } catch (error) {
+      this.isAdmin.set(false);
+      console.error('Error verificando estado admin:', error);
+    }
+  }
+
+  // Nuevo método público: obtener estado admin
+  getAdminStatus(): boolean {
+    return this.isAdmin();
+  }
+
   getCurrentUser() {
     return account.get();
   }
 
-  // Limpiar la sesión actual
   private async clearCurrentSession(): Promise<void> {
     try {
       const session = await account.getSession('current');

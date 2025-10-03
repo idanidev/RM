@@ -26,12 +26,14 @@ export class HeaderComponent implements OnInit {
   items: MenuItem[] | undefined;
   nombreUsuario = computed(() => this.authService.user()?.name ?? '');
 
-  constructor(private authService: AuthService,) {
+  // Nuevo: computed para el estado admin
+  isAdmin = computed(() => this.authService.isAdmin());
+
+  constructor(private authService: AuthService) {
     this.profilePictureUrl = 'assets/images/profile.png';
   }
 
   ngOnInit() {
-
     const savedDarkMode = localStorage.getItem('darkMode');
     this.darkMode = savedDarkMode ? JSON.parse(savedDarkMode) : false;
 
@@ -42,6 +44,10 @@ export class HeaderComponent implements OnInit {
       element?.classList.remove('my-app-dark');
     }
 
+    this.buildMenuItems();
+  }
+
+  buildMenuItems() {
     this.items = [
       {
         label: 'Entrenamientos',
@@ -57,14 +63,16 @@ export class HeaderComponent implements OnInit {
             icon: 'pi pi-stopwatch',
             routerLink: ['/entrenamientos'],
             command: () => this.drawerVisible = false,
-            disabled: true //TODO: Habilitar cuando se implemente la página de entrenamientos
+            disabled: !this.isAdmin(), // Habilitado solo para admins
+            visible: this.isAdmin() // Mostrar solo si es admin
           },
           {
             label: 'GYM',
             icon: 'pi pi-calendar',
             routerLink: ['/gym'],
             command: () => this.drawerVisible = false,
-            disabled: false //TODO: Habilitar cuando se implemente la página de gym
+            disabled: !this.isAdmin(), // Habilitado solo para admins
+            visible: this.isAdmin() // Mostrar solo si es admin
           }
         ]
       },

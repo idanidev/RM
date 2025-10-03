@@ -1,6 +1,8 @@
-<div class="gym-container p-3">
+<div class="gym-container">
   <!-- Mensaje si no hay plan configurado -->
-  <div *ngIf="!planConfigurado" class="flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+  <div *ngIf="!planConfigurado"
+    class="flex flex-column align-items-center justify-content-center"
+    style="min-height: 50vh;">
     <i class="pi pi-calendar-plus text-6xl mb-4 text-primary"></i>
     <h2 class="text-center mb-2">¡Configura tu plan de entrenamiento!</h2>
     <p class="text-center text-color-secondary mb-4">
@@ -14,9 +16,11 @@
   </div>
 
   <!-- Vista con plan configurado -->
-  <div *ngIf="planConfigurado">
+  <div *ngIf="planConfigurado" class="flex flex-column flex-1"
+    style="min-height: 0;">
     <!-- Header con controles -->
-    <div class="flex flex-column md:flex-row align-items-stretch md:align-items-center justify-content-between gap-2 mb-3">
+    <div
+      class="flex flex-column md:flex-row align-items-stretch md:align-items-center justify-content-between gap-2 mb-2">
       <div class="flex gap-2 flex-wrap">
         <p-button
           [outlined]="vistaActual !== 'semanal'"
@@ -88,12 +92,15 @@
             (click)="verDetalleEntrenamiento(dia)">
             <ng-template pTemplate="header">
               <div class="dia-header p-2 text-center">
-                <div class="dia-semana text-sm font-semibold">{{ diasSemana[i] }}</div>
-                <div class="dia-numero text-3xl font-bold">{{ dia | date: 'd' }}</div>
+                <div class="dia-semana text-sm font-semibold">{{ diasSemana[i]
+                  }}</div>
+                <div class="dia-numero text-3xl font-bold">{{ dia | date: 'd'
+                  }}</div>
               </div>
             </ng-template>
 
-            <div class="dia-contenido p-2" *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
+            <div class="dia-contenido p-2"
+              *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
               <div class="flex flex-wrap gap-2 mb-2">
                 <span
                   *ngFor="let grupo of entrenamiento.grupos"
@@ -112,7 +119,8 @@
               </div>
             </div>
 
-            <div class="dia-vacio p-3 text-center" *ngIf="!obtenerEntrenamientoDia(dia)">
+            <div class="dia-vacio p-3 text-center"
+              *ngIf="!obtenerEntrenamientoDia(dia)">
               <i class="pi pi-moon text-4xl mb-2 text-400"></i>
               <div class="text-sm text-color-secondary">Descanso</div>
             </div>
@@ -124,16 +132,16 @@
     <!-- Vista Mensual -->
     <div *ngIf="vistaActual === 'mensual'" class="vista-mensual">
       <!-- Header del mes -->
-      <div class="flex align-items-center justify-content-between mb-3">
+      <div class="flex align-items-center justify-content-between mb-2">
         <p-button
           icon="pi pi-chevron-left"
           [rounded]="true"
           [text]="true"
           (onClick)="mesAnterior()"></p-button>
 
-        <h3 class="m-0 text-center flex-1 text-capitalize">
+        <h2 class="m-0 text-center flex-1 text-capitalize font-bold text-xl">
           {{ obtenerNombreMes() }}
-        </h3>
+        </h2>
 
         <p-button
           icon="pi pi-chevron-right"
@@ -142,58 +150,49 @@
           (onClick)="mesSiguiente()"></p-button>
       </div>
 
-      <!-- Grid del calendario -->
-      <div class="calendario-mensual">
-        <!-- Headers de días de la semana -->
-        <div class="calendario-header grid">
-          <div *ngFor="let dia of diasSemana" class="col text-center font-bold py-2">
-            <span class="hidden md:inline">{{ dia }}</span>
-            <span class="md:hidden">{{ dia.substring(0, 1) }}</span>
+      <!-- Calendario estilo iOS -->
+      <div class="calendario-ios">
+        <!-- Headers de días -->
+        <div class="calendario-ios-header">
+          <div *ngFor="let dia of diasSemana" class="dia-header-ios">
+            {{ dia }}
           </div>
         </div>
 
-        <!-- Días del mes -->
-        <div class="grid gap-2">
+        <!-- Grid de días -->
+        <div class="calendario-ios-grid">
           <div
             *ngFor="let dia of obtenerDiasMes()"
-            class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col">
-            <p-card
-              class="dia-card-mensual h-full"
-              [ngClass]="{
-                'dia-hoy': esHoy(dia),
-                'dia-mes-anterior': !esMesActual(dia),
-                'dia-completado': obtenerEntrenamientoDia(dia)?.completado
-              }"
-              (click)="esMesActual(dia) && verDetalleEntrenamiento(dia)">
+            class="dia-celda-ios"
+            [ngClass]="{
+              'dia-otro-mes': !esMesActual(dia),
+              'dia-hoy-ios': esHoy(dia),
+              'dia-tiene-entrenamiento': obtenerEntrenamientoDia(dia),
+              'dia-completado-ios': obtenerEntrenamientoDia(dia)?.completado
+            }"
+            (click)="esMesActual(dia) && verDetalleEntrenamiento(dia)">
 
-              <ng-template pTemplate="header">
-                <div class="dia-header-mensual p-2 text-center">
-                  <div class="dia-numero-mensual text-xl font-bold">
-                    {{ dia | date: 'd' }}
-                  </div>
-                </div>
-              </ng-template>
+            <div class="dia-numero-ios">
+              {{ dia | date: 'd' }}
+            </div>
 
-              <div class="dia-contenido-mensual p-2" *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
-                <div class="flex flex-wrap gap-1">
-                  <span
-                    *ngFor="let grupo of entrenamiento.grupos"
-                    class="grupo-badge-small text-xs px-2 py-1 border-round">
-                    {{ obtenerNombreGrupo(grupo).substring(0, 3) }}
-                  </span>
-                </div>
-
-                <div class="flex justify-content-end mt-1" *ngIf="esMesActual(dia)">
-                  <i
-                    [class]="entrenamiento.completado ? 'pi pi-check-circle text-green-500' : 'pi pi-circle text-400'"
-                    class="text-sm"></i>
-                </div>
+            <div class="dia-contenido-ios"
+              *ngIf="obtenerEntrenamientoDia(dia) as entrenamiento">
+              <div class="grupos-iniciales">
+                <span
+                  *ngFor="let grupo of entrenamiento.grupos"
+                  class="grupo-inicial"
+                  [ngClass]="{'completado': entrenamiento.completado}"
+                  [style.border-bottom-color]="obtenerColorGrupo(grupo)">
+                  {{ obtenerInicialesGrupo(grupo) }}
+                </span>
               </div>
+            </div>
 
-              <div class="dia-vacio-mensual p-2 text-center" *ngIf="!obtenerEntrenamientoDia(dia) && esMesActual(dia)">
-                <i class="pi pi-moon text-400 text-sm"></i>
-              </div>
-            </p-card>
+            <div class="dia-sin-entrenamiento"
+              *ngIf="!obtenerEntrenamientoDia(dia) && esMesActual(dia)">
+              <i class="pi pi-moon"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -205,55 +204,150 @@
 <p-drawer
   [(visible)]="mostrarConfiguracion"
   position="right"
-  [style]="{width: '90vw', 'max-width': '400px'}"
+  [style]="{width: '90vw', 'max-width': '450px'}"
   header="Configurar Plan de Entrenamiento">
   <div class="flex flex-column gap-4 p-3">
-    <!-- Grupos musculares -->
+
+    <!-- Paso 1: Grupos musculares -->
     <div class="field">
-      <label for="gruposMusculares" class="font-bold block mb-2">
-        ¿Qué grupos musculares quieres entrenar?
+      <label class="font-bold block mb-2 text-lg">
+        1️⃣ ¿Qué grupos musculares?
       </label>
-      <p-multiSelect
+      <p-multiselect
         [(ngModel)]="gruposSeleccionados"
         [options]="gruposMusculares"
         optionLabel="nombre"
         placeholder="Selecciona grupos musculares"
         display="chip"
         styleClass="w-full">
-      </p-multiSelect>
+      </p-multiselect>
       <small class="block mt-2 text-color-secondary">
-        Selecciona los músculos que trabajarás en tu rutina
+        Selecciona los músculos que trabajarás
       </small>
     </div>
 
-    <!-- Días por semana -->
+    <!-- Paso 2: Tipo de selección -->
     <div class="field">
-      <label for="diasSemana" class="font-bold block mb-2">
+      <label class="font-bold block mb-2 text-lg">
+        2️⃣ ¿Cómo quieres organizar tus entrenamientos?
+      </label>
+      <div class="flex flex-column gap-2">
+        <div class="flex align-items-center">
+          <input
+            type="radio"
+            id="cantidad"
+            value="cantidad-dias"
+            [(ngModel)]="tipoSeleccion"
+            class="mr-2" />
+          <label for="cantidad" class="cursor-pointer">
+            Cantidad de días por semana
+          </label>
+        </div>
+        <div class="flex align-items-center">
+          <input
+            type="radio"
+            id="especificos"
+            value="dias-especificos"
+            [(ngModel)]="tipoSeleccion"
+            class="mr-2" />
+          <label for="especificos" class="cursor-pointer">
+            Días específicos de la semana
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opción A: Cantidad de días -->
+    <div class="field" *ngIf="tipoSeleccion === 'cantidad-dias'">
+      <label for="cantidadDias" class="font-bold block mb-2">
         ¿Cuántos días a la semana?
       </label>
       <p-select
-        [(ngModel)]="diasPorSemana"
+        [(ngModel)]="cantidadDias"
         [options]="opcionesDias"
         placeholder="Selecciona días"
         styleClass="w-full" />
       <small class="block mt-2 text-color-secondary">
-        El sistema distribuirá automáticamente los grupos en estos días
+        El sistema distribuirá automáticamente
       </small>
     </div>
 
-    <!-- Resumen de selección -->
-    <div *ngIf="gruposSeleccionados.length > 0" class="p-3 border-round surface-border" style="border: 1px solid var(--surface-border);">
-      <div class="font-bold mb-2">✅ Has seleccionado:</div>
-      <div class="flex flex-wrap gap-2 mb-2">
-        <span
-          *ngFor="let grupo of gruposSeleccionados"
-          class="grupo-badge text-xs px-2 py-1 border-round">
-          {{ grupo.nombre }}
-        </span>
+    <!-- Opción B: Días específicos -->
+    <div class="field" *ngIf="tipoSeleccion === 'dias-especificos'">
+      <label class="font-bold block mb-2">
+        ¿Qué días de la semana?
+      </label>
+      <div class="flex flex-column gap-2">
+        <div *ngFor="let dia of diasSemanaOpciones"
+          class="flex align-items-center">
+          <input
+            type="checkbox"
+            [id]="'dia-' + dia.valor"
+            [value]="dia.valor"
+            [(ngModel)]="diasSemanaSeleccionados"
+            [checked]="diasSemanaSeleccionados.includes(dia.valor)"
+            (change)="onDiaChange(dia.valor, $event)"
+            class="mr-2" />
+          <label [for]="'dia-' + dia.valor" class="cursor-pointer">
+            {{ dia.nombre }}
+          </label>
+        </div>
       </div>
-      <div class="text-sm text-color-secondary">
-        {{ diasPorSemana }} días por semana
+      <small class="block mt-2 text-color-secondary">
+        Selecciona los días exactos que entrenarás
+      </small>
+    </div>
+
+    <!-- Paso 3: Duración -->
+    <div class="field">
+      <label for="duracionMeses" class="font-bold block mb-2 text-lg">
+        3️⃣ ¿Por cuántos meses?
+      </label>
+      <p-select
+        [(ngModel)]="duracionMeses"
+        [options]="opcionesMeses"
+        placeholder="Selecciona meses"
+        styleClass="w-full" />
+      <small class="block mt-2 text-color-secondary">
+        El plan se generará automáticamente para este periodo
+      </small>
+    </div>
+
+    <!-- Paso 4: Rutina partida -->
+    <div class="field">
+      <label class="font-bold block mb-2 text-lg">
+        4️⃣ ¿Dividir la rutina?
+      </label>
+      <div class="flex align-items-center gap-2">
+        <input
+          type="checkbox"
+          id="rutinaPartida"
+          [(ngModel)]="rutinaPartida"
+          class="mr-2" />
+        <label for="rutinaPartida" class="cursor-pointer">
+          Dividir en 2 semanas (más descanso entre grupos)
+        </label>
       </div>
+      <small class="block mt-2 text-color-secondary">
+        Si está activado, la rutina se distribuye en 2 semanas en vez de 1,
+        dando más tiempo de recuperación
+      </small>
+    </div>
+
+    <!-- Resumen -->
+    <div *ngIf="gruposSeleccionados.length > 0" class="p-3 border-round"
+      style="border: 2px solid var(--primary-color); background: var(--primary-50);">
+      <div class="font-bold mb-2 text-primary">📋 Resumen de tu plan:</div>
+      <ul class="m-0 pl-3">
+        <li>{{ gruposSeleccionados.length }} grupos musculares</li>
+        <li *ngIf="tipoSeleccion === 'cantidad-dias'">{{ cantidadDias }} días
+          por semana</li>
+        <li *ngIf="tipoSeleccion === 'dias-especificos'">{{
+          diasSemanaSeleccionados.length }} días específicos</li>
+        <li>{{ duracionMeses }} {{ duracionMeses === 1 ? 'mes' : 'meses' }}</li>
+        <li *ngIf="rutinaPartida">Rutina dividida en 2 semanas ✅</li>
+        <li *ngIf="!rutinaPartida">Rutina en 1 semana</li>
+      </ul>
     </div>
 
     <!-- Botones -->
@@ -300,8 +394,10 @@
     </div>
 
     <!-- Estado -->
-    <div class="flex align-items-center gap-3 p-3 border-round surface-border" style="border: 1px solid var(--surface-border);">
-      <i [class]="diaSeleccionado.completado ? 'pi pi-check-circle text-green-500 text-3xl' : 'pi pi-circle text-400 text-3xl'"></i>
+    <div class="flex align-items-center gap-3 p-3 border-round surface-border"
+      style="border: 1px solid var(--surface-border);">
+      <i
+        [class]="diaSeleccionado.completado ? 'pi pi-check-circle text-green-500 text-3xl' : 'pi pi-circle text-400 text-3xl'"></i>
       <div class="flex-1">
         <div class="font-bold mb-1">Estado del entrenamiento</div>
         <div class="text-sm text-color-secondary">
@@ -314,7 +410,8 @@
     <div>
       <h4 class="mt-0 mb-2">Notas</h4>
       <p class="text-color-secondary m-0">
-        Aquí podrás agregar notas sobre tu entrenamiento, peso levantado, sensaciones, etc.
+        Aquí podrás agregar notas sobre tu entrenamiento, peso levantado,
+        sensaciones, etc.
         <em>(Próximamente)</em>
       </p>
     </div>
