@@ -1,3 +1,4 @@
+<!-- gym.component.html -->
 <div class="gym-container">
   <!-- Mensaje si no hay plan configurado -->
   <div *ngIf="!planConfigurado"
@@ -92,8 +93,11 @@
             (click)="verDetalleEntrenamiento(dia)">
             <ng-template pTemplate="header">
               <div class="dia-header p-2 text-center">
-                <div class="dia-semana text-sm font-semibold">{{ diasSemana[i]
-                  }}</div>
+                <!-- Día de la semana responsive -->
+                <div class="dia-semana text-sm font-semibold">
+                  <span class="md:hidden">{{ diasSemanaCortos[i] }}</span>
+                  <span class="hidden md:inline">{{ diasSemana[i] }}</span>
+                </div>
                 <div class="dia-numero text-3xl font-bold">{{ dia | date: 'd'
                   }}</div>
               </div>
@@ -105,7 +109,11 @@
                 <span
                   *ngFor="let grupo of entrenamiento.grupos"
                   class="grupo-badge text-xs px-2 py-1 border-round">
-                  {{ obtenerNombreGrupo(grupo) }}
+                  <!-- Nombres de grupos responsive -->
+                  <span class="md:hidden">{{ obtenerNombreCortoGrupo(grupo)
+                    }}</span>
+                  <span class="hidden md:inline">{{ obtenerNombreGrupo(grupo)
+                    }}</span>
                 </span>
               </div>
 
@@ -152,10 +160,12 @@
 
       <!-- Calendario estilo iOS -->
       <div class="calendario-ios">
-        <!-- Headers de días -->
+        <!-- Headers de días responsive -->
         <div class="calendario-ios-header">
-          <div *ngFor="let dia of diasSemana" class="dia-header-ios">
-            {{ dia }}
+          <div *ngFor="let dia of diasSemana; let i = index"
+            class="dia-header-ios">
+            <span class="md:hidden">{{ diasSemanaCortos[i] }}</span>
+            <span class="hidden md:inline">{{ dia }}</span>
           </div>
         </div>
 
@@ -220,6 +230,22 @@
         placeholder="Selecciona grupos musculares"
         display="chip"
         styleClass="w-full">
+        <ng-template let-option pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div
+              class="w-2rem h-2rem border-circle flex align-items-center justify-content-center text-white font-bold"
+              [style.background-color]="option.color">
+              {{ option.nombreCorto }}
+            </div>
+            <span>{{ option.nombre }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-value pTemplate="selectedItem">
+          <div class="flex align-items-center gap-1">
+            <span class="hidden md:inline">{{ value.nombre }}</span>
+            <span class="md:hidden">{{ value.nombreCorto }}</span>
+          </div>
+        </ng-template>
       </p-multiselect>
       <small class="block mt-2 text-color-secondary">
         Selecciona los músculos que trabajarás
@@ -229,7 +255,7 @@
     <!-- Paso 2: Tipo de selección -->
     <div class="field">
       <label class="font-bold block mb-2 text-lg">
-        2️⃣ ¿Cómo quieres organizar tus entrenamientos?
+        2️⃣ ¿Cómo organizar tus entrenamientos?
       </label>
       <div class="flex flex-column gap-2">
         <div class="flex align-items-center">
@@ -289,7 +315,8 @@
             (change)="onDiaChange(dia.valor, $event)"
             class="mr-2" />
           <label [for]="'dia-' + dia.valor" class="cursor-pointer">
-            {{ dia.nombre }}
+            <span class="hidden md:inline">{{ dia.nombre }}</span>
+            <span class="md:hidden">{{ dia.nombreCorto }}</span>
           </label>
         </div>
       </div>
@@ -388,7 +415,11 @@
           class="flex-1"
           styleClass="text-center">
           <div class="text-2xl mb-2">💪</div>
-          <div class="font-bold">{{ obtenerNombreGrupo(grupo) }}</div>
+          <div class="font-bold">
+            <span class="hidden md:inline">{{ obtenerNombreGrupo(grupo)
+              }}</span>
+            <span class="md:hidden">{{ obtenerNombreCortoGrupo(grupo) }}</span>
+          </div>
         </p-card>
       </div>
     </div>

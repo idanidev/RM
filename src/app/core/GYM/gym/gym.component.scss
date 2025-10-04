@@ -11,93 +11,155 @@
   }
 }
 
-// Estilos para las tarjetas de día
-.dia-card {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  height: 100%;
+// Vista semanal horizontal compacta
+.vista-semanal {
+  .semana-horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    @media (min-width: 768px) {
+      gap: 0.75rem;
+    }
   }
 
-  &:active {
-    transform: translateY(0);
-  }
+  .dia-horizontal {
+    background: var(--surface-card);
+    border-radius: 12px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    min-height: 60px;
 
-  // Día actual
-  &.dia-hoy {
-    border: 2px solid var(--primary-color);
+    @media (min-width: 768px) {
+      padding: 1rem;
+      gap: 1.5rem;
+    }
 
-    ::ng-deep .p-card-header {
-      background: var(--primary-color);
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-      .dia-header {
+    &.dia-hoy-horizontal {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px var(--primary-color);
+
+      .dia-header-horizontal {
+        background: var(--primary-color);
         color: var(--primary-color-text);
       }
     }
-  }
 
-  // Día completado
-  &.dia-completado {
-    ::ng-deep .p-card-header {
-      background: var(--green-500);
-
-      .dia-header {
+    &.dia-completado-horizontal {
+      .dia-header-horizontal {
+        background: var(--green-500);
         color: white;
       }
     }
+  }
 
-    ::ng-deep .p-card-body {
-      background: var(--green-50);
+  .dia-header-horizontal {
+    background: var(--surface-100);
+    border-radius: 8px;
+    padding: 0.5rem;
+    min-width: 60px;
+    text-align: center;
+    flex-shrink: 0;
+
+    @media (min-width: 768px) {
+      min-width: 80px;
+      padding: 0.75rem;
     }
   }
 
-  // Día futuro
-  &.dia-futuro {
-    opacity: 0.65;
+  .dia-nombre-horizontal {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.125rem;
+
+    @media (min-width: 768px) {
+      font-size: 0.75rem;
+    }
   }
 
-  ::ng-deep .p-card-header {
-    padding: 0;
+  .dia-numero-horizontal {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+    }
   }
 
-  ::ng-deep .p-card-body {
-    padding: 0;
-  }
-}
+  .dia-grupos-horizontal {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    align-items: center;
+    position: relative;
 
-// Header del día
-.dia-header {
-  padding: 0.75rem;
-}
-
-// Contenido del día
-.dia-contenido {
-  min-height: 100px;
-}
-
-// Día vacío
-.dia-vacio {
-  min-height: 100px;
-  opacity: 0.5;
-
-  &:hover {
-    opacity: 0.8;
+    @media (min-width: 768px) {
+      gap: 0.5rem;
+    }
   }
 
-  i {
-    opacity: 0.6;
-  }
-}
+  .grupo-badge-horizontal {
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.375rem 0.625rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
 
-// Badges de grupos musculares
-.grupo-badge {
-  background: var(--primary-100);
-  color: var(--primary-700);
-  font-weight: 600;
-  white-space: nowrap;
+    @media (min-width: 768px) {
+      font-size: 0.75rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 8px;
+    }
+  }
+
+  .check-horizontal {
+    background: var(--green-500);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+
+    @media (min-width: 768px) {
+      width: 28px;
+      height: 28px;
+      font-size: 0.875rem;
+    }
+  }
+
+  .dia-descanso-horizontal {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    font-size: 1.5rem;
+
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
+  }
 }
 
 // Vista mensual estilo iOS
