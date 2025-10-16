@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -10,6 +10,7 @@ import { providePrimeNG } from 'primeng/config';
 import { ToastModule } from 'primeng/toast';
 import { routes } from './app.routes';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
 
@@ -30,5 +31,8 @@ export const appConfig: ApplicationConfig = {
         darkModeSelector: '.my-app-dark'
       }
     }
-  })]
+  }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          })]
 };

@@ -1,8 +1,9 @@
-<div *ngIf="loaderService.loading$ | async" class="spinner-overlay surface-ground">
-    <div class="spinner-kettlebell"></div>
+<div *ngIf="loaderService.loading$ | async"
+  class="spinner-overlay surface-ground">
+  <div class="spinner-kettlebell"></div>
 </div>
 <div *ngIf="!(loaderService.loading$ | async)">
-    <app-header *ngIf="!isAuthRoute() && authService.loggedIn()"></app-header>
-    <p-toast></p-toast>
-    <router-outlet></router-outlet>
+  <app-header *ngIf="!isAuthRoute() && authService.loggedIn()"></app-header>
+  <p-toast></p-toast>
+  <router-outlet></router-outlet>
 </div>

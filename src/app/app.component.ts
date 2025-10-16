@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from './core/components/header/header.component';
 import { AuthService } from './core/service/auth.service';
 import { LoaderService } from './core/service/loader.service';
+import { PwaService } from './services/pwa.service';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
     public authService: AuthService,
     public loaderService: LoaderService,
     private router: Router,
+    private pwaService: PwaService
   ) { }
 
   ngOnInit(): void {
