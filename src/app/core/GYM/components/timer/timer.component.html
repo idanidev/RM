@@ -1,0 +1,54 @@
+<div class="timer-flotante" *ngIf="ejercicio">
+  <div class="timer-container">
+    <!-- Versión compacta para móvil -->
+    <div class="timer-compacto">
+      <div class="timer-circle-small">
+        <svg class="timer-svg-small" viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="45" fill="none" stroke="var(--surface-200)" stroke-width="6" />
+          <circle
+            class="timer-progress"
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke="var(--primary-color)"
+            stroke-width="6"
+            [style.stroke-dasharray]="283"
+            [style.stroke-dashoffset]="283 - (283 * porcentajeCompletado / 100)"
+            transform="rotate(-90 50 50)" />
+        </svg>
+        <div class="timer-text-small">
+          <div class="tiempo-numero-small">{{ formatearTiempo(tiempoRestante()) }}</div>
+        </div>
+      </div>
+      
+      <div class="timer-controls-compacto">
+        <p-button
+          *ngIf="!estaCorriendo() && !estaPausado()"
+          icon="pi pi-play"
+          [rounded]="true"
+          [severity]="'success'"
+          (onClick)="iniciar()"
+          [size]="'small'"
+          class="timer-btn-small"></p-button>
+        <p-button
+          *ngIf="estaCorriendo()"
+          icon="pi pi-pause"
+          [rounded]="true"
+          [severity]="'warn'"
+          (onClick)="pausar()"
+          [size]="'small'"
+          class="timer-btn-small"></p-button>
+        <p-button
+          *ngIf="estaPausado()"
+          icon="pi pi-play"
+          [rounded]="true"
+          [severity]="'success'"
+          (onClick)="reanudar()"
+          [size]="'small'"
+          class="timer-btn-small"></p-button>
+      </div>
+    </div>
+  </div>
+</div>
+

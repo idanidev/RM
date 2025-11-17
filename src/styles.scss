@@ -83,6 +83,15 @@ body {
   }
 }
 
+@keyframes pulsar {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
 .spinner-overlay {
   position: fixed;
   top: 0;
@@ -102,7 +111,7 @@ body {
   background-image: url('assets/images/All1fit_logo_black.png');
   background-size: contain;
   background-repeat: no-repeat;
-  animation: girar 1s linear infinite;
+  animation: pulsar 1s ease-in-out infinite;
 }
 
 @media (prefers-color-scheme: dark) {

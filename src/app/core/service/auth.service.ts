@@ -52,7 +52,6 @@ export class AuthService {
       await this.checkAdminStatus();
 
       this.router.navigate(['/']);
-      this.errorService.showSuccess('Inicio de sesión exitoso', 'Has iniciado sesión correctamente.');
     } catch (error: any) {
       const detail = error?.message || 'Ocurrió un error inesperado al iniciar sesión.';
       this.errorService.showError('Error al iniciar sesión', detail);

@@ -7,7 +7,7 @@
       "installMode": "prefetch",
       "resources": {
         "files": [
-          "/public/icons/All1fit_logo_black.png",
+          "/icons/All1fit_logo_black.png",
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",

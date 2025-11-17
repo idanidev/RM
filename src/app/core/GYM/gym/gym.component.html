@@ -467,4 +467,318 @@
   </ng-template>
 </p-dialog>
 
+<!-- Drawer de Ejercicios con Carousel Deslizable -->
+<p-drawer
+  [(visible)]="mostrarEjerciciosDrawer"
+  position="bottom"
+  [style]="{'height': '90vh', 'max-height': 'none'}"
+  [modal]="true"
+  [header]="'Ejercicios - ' + (fechaDiaSeleccionado | date: 'EEEE, d MMMM yyyy')"
+  (onHide)="cerrarDetalle()"
+  styleClass="ejercicios-drawer">
+  
+  <div *ngIf="diaSeleccionado" class="ejercicios-container h-full flex flex-column">
+    <!-- Header con grupos musculares -->
+    <div class="mb-3">
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span
+          *ngFor="let grupo of diaSeleccionado.grupos"
+          class="grupo-badge-ejercicios px-3 py-1 border-round text-sm font-bold text-white"
+          [style.background-color]="obtenerColorGrupo(grupo)">
+          {{ obtenerNombreGrupo(grupo) }}
+        </span>
+      </div>
+      
+      <div class="flex align-items-center justify-content-between">
+        <div class="flex align-items-center gap-2">
+          <i [class]="diaSeleccionado.completado ? 'pi pi-check-circle text-green-500 text-xl' : 'pi pi-circle text-400 text-xl'"></i>
+          <span class="font-semibold">
+            {{ diaSeleccionado.completado ? 'Entrenamiento Completado' : 'Entrenamiento Pendiente' }}
+          </span>
+        </div>
+        <p-button
+          [label]="diaSeleccionado.completado ? 'Marcar Pendiente' : 'Marcar Completado'"
+          [icon]="diaSeleccionado.completado ? 'pi pi-circle' : 'pi pi-check'"
+          [severity]="diaSeleccionado.completado ? 'secondary' : 'success'"
+          [size]="'small'"
+          (onClick)="diaSeleccionado && marcarCompletado(diaSeleccionado)"></p-button>
+      </div>
+    </div>
+
+    <!-- Carousel deslizable de ejercicios -->
+    <div class="ejercicios-carousel-container flex-1" 
+         (touchstart)="touchStart($event)"
+         (touchend)="touchEnd($event)">
+      
+      <!-- Indicador de ejercicio actual -->
+      <div class="ejercicio-indicador mb-2">
+        <span class="text-sm text-color-secondary">
+          Ejercicio {{ ejercicioActualIndex + 1 }} de {{ ejerciciosDelDia.length }}
+        </span>
+        <div class="indicadores-puntos flex gap-1 justify-content-center mt-2">
+          <span
+            *ngFor="let ejercicio of ejerciciosDelDia; let i = index"
+            class="punto-indicador"
+            [class.activo]="i === ejercicioActualIndex"
+            (click)="irAEjercicio(i)"></span>
+        </div>
+      </div>
+
+      <!-- Contenedor del carousel -->
+      <div class="carousel-wrapper">
+        <div class="carousel-track" 
+             [style.transform]="'translateX(-' + (ejercicioActualIndex * 100) + '%)'">
+          
+          <div
+            *ngFor="let ejercicio of ejerciciosDelDia; let i = index"
+            class="carousel-slide">
+            
+            <div class="ejercicio-slide-card">
+              <!-- Imagen del ejercicio -->
+              <div class="ejercicio-imagen-container">
+                <img
+                  [src]="obtenerImagenEjercicio(ejercicio)"
+                  [alt]="ejercicio.nombre"
+                  class="ejercicio-imagen"
+                  (error)="onErrorImagen($event)" />
+                <div class="ejercicio-overlay">
+                  <p-button
+                    [icon]="ejercicio.completado ? 'pi pi-check-circle' : 'pi pi-circle'"
+                    [severity]="ejercicio.completado ? 'success' : 'secondary'"
+                    [rounded]="true"
+                    class="ejercicio-completado-btn"
+                    (onClick)="toggleEjercicioCompletado(ejercicio)"></p-button>
+                </div>
+              </div>
+
+              <!-- Información del ejercicio -->
+              <div class="ejercicio-slide-info p-3">
+                <h2 class="ejercicio-nombre-slide m-0 mb-3">{{ ejercicio.nombre }}</h2>
+                
+                <div class="ejercicio-detalles grid">
+                  <div class="col-6 detalle-item">
+                    <i class="pi pi-list text-primary"></i>
+                    <div>
+                      <div class="detalle-valor">{{ ejercicio.series }}</div>
+                      <div class="detalle-label">Series</div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-6 detalle-item">
+                    <i class="pi pi-replay text-primary"></i>
+                    <div>
+                      <div class="detalle-valor">{{ ejercicio.repeticiones }}</div>
+                      <div class="detalle-label">Repeticiones</div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-6 detalle-item" *ngIf="ejercicio.peso">
+                    <i class="pi pi-weight text-primary"></i>
+                    <div>
+                      <div class="detalle-valor">{{ ejercicio.peso }} kg</div>
+                      <div class="detalle-label">Peso</div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-6 detalle-item" *ngIf="ejercicio.descanso">
+                    <i class="pi pi-clock text-primary"></i>
+                    <div>
+                      <div class="detalle-valor">{{ ejercicio.descanso }}s</div>
+                      <div class="detalle-label">Descanso</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ejercicio-notas-slide mt-3" *ngIf="ejercicio.notas">
+                  <p class="text-sm text-color-secondary m-0">
+                    <i class="pi pi-file-edit mr-2"></i>
+                    {{ ejercicio.notas }}
+                  </p>
+                </div>
+
+                <div class="ejercicio-acciones-slide flex gap-2 mt-3">
+                  <p-button
+                    label="Editar"
+                    icon="pi pi-pencil"
+                    [outlined]="true"
+                    [size]="'small'"
+                    class="flex-1"
+                    (onClick)="abrirFormEjercicio(ejercicio)"></p-button>
+                  <p-button
+                    label="Eliminar"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [outlined]="true"
+                    [size]="'small'"
+                    class="flex-1"
+                    (onClick)="eliminarEjercicio(ejercicio)"></p-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de navegación -->
+      <div class="carousel-nav">
+        <p-button
+          icon="pi pi-chevron-left"
+          [rounded]="true"
+          [text]="true"
+          [disabled]="ejercicioActualIndex === 0"
+          (onClick)="ejercicioAnterior()"
+          class="nav-btn"></p-button>
+        
+        <p-button
+          icon="pi pi-chevron-right"
+          [rounded]="true"
+          [text]="true"
+          [disabled]="ejercicioActualIndex === ejerciciosDelDia.length - 1"
+          (onClick)="ejercicioSiguiente()"
+          class="nav-btn"></p-button>
+      </div>
+    </div>
+
+    <!-- Temporizador flotante -->
+    <app-timer
+      *ngIf="ejercicioActual"
+      [ejercicio]="ejercicioActual"
+      [descanso]="ejercicioActual.descanso || 60"
+      (tiempoCompletado)="onTiempoCompletado()"></app-timer>
+  </div>
+</p-drawer>
+
+<!-- Dialog para agregar/editar ejercicio -->
+<p-dialog
+  [(visible)]="mostrarFormEjercicio"
+  [modal]="true"
+  [style]="{width: '95vw', 'max-width': '500px'}"
+  [header]="ejercicioEditando?.id ? 'Editar Ejercicio' : 'Nuevo Ejercicio'"
+  (onHide)="cerrarFormEjercicio()"
+  styleClass="ejercicio-form-dialog">
+  
+  <div *ngIf="ejercicioEditando" class="ejercicio-form-container">
+    <!-- Nombre del ejercicio -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <i class="pi pi-tag text-primary"></i>
+        <label for="nombreEjercicio" class="form-label">Nombre del Ejercicio *</label>
+      </div>
+      <input
+        id="nombreEjercicio"
+        type="text"
+        pInputText
+        [(ngModel)]="ejercicioEditando.nombre"
+        placeholder="Ej: Press de banca"
+        class="w-full form-input" />
+    </div>
+    
+    <!-- Series y Repeticiones -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <i class="pi pi-list text-primary"></i>
+        <span class="form-label">Series y Repeticiones</span>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="series" class="form-field-label">
+            <i class="pi pi-th-large mr-1"></i>
+            Series
+          </label>
+          <p-inputNumber
+            id="series"
+            [(ngModel)]="ejercicioEditando.series"
+            [min]="1"
+            [max]="10"
+            [showButtons]="true"
+            class="w-full"></p-inputNumber>
+        </div>
+        
+        <div class="form-field">
+          <label for="repeticiones" class="form-field-label">
+            <i class="pi pi-replay mr-1"></i>
+            Repeticiones
+          </label>
+          <input
+            id="repeticiones"
+            type="text"
+            pInputText
+            [(ngModel)]="ejercicioEditando.repeticiones"
+            placeholder="10-12"
+            class="w-full form-input" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Peso y Descanso -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <i class="pi pi-cog text-primary"></i>
+        <span class="form-label">Configuración</span>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="peso" class="form-field-label">
+            <i class="pi pi-weight mr-1"></i>
+            Peso (kg)
+          </label>
+          <p-inputNumber
+            id="peso"
+            [(ngModel)]="ejercicioEditando.peso"
+            [min]="0"
+            [showButtons]="true"
+            [suffix]="' kg'"
+            class="w-full"></p-inputNumber>
+        </div>
+        
+        <div class="form-field">
+          <label for="descanso" class="form-field-label">
+            <i class="pi pi-clock mr-1"></i>
+            Descanso (s)
+          </label>
+          <p-inputNumber
+            id="descanso"
+            [(ngModel)]="ejercicioEditando.descanso"
+            [min]="0"
+            [showButtons]="true"
+            [suffix]="' s'"
+            class="w-full"></p-inputNumber>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Notas -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <i class="pi pi-file-edit text-primary"></i>
+        <label for="notas" class="form-label">Notas (opcional)</label>
+      </div>
+      <textarea
+        id="notas"
+        pInputTextarea
+        [(ngModel)]="ejercicioEditando.notas"
+        rows="3"
+        placeholder="Añade notas sobre el ejercicio, técnica, sensaciones..."
+        class="w-full form-textarea"></textarea>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="form-footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        [outlined]="true"
+        [severity]="'secondary'"
+        (onClick)="cerrarFormEjercicio()"
+        class="flex-1"></p-button>
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        (onClick)="guardarEjercicio()"
+        class="flex-1"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
 <p-toast></p-toast>
